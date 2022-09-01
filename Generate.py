@@ -2,6 +2,7 @@
 # Author: Kai Leon Deines
 # =========================
 
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from colorama import Fore
@@ -16,14 +17,16 @@ def list_table(driver: webdriver):
     details_row_cells = driver.find_elements(By.CSS_SELECTOR, '[data-automationid=DetailsRowCell]')  # cells
 
     # get number of rows and columns
-    rows = len(details_rows)
-    cols = int(len(details_row_cells) / rows)
-
+    rows = len(details_rows) + 1
+    cols = int(len(details_row_cells) / len(details_rows))
     # create table list
     print('Generating table:')
-    table = []
+    table = [[]]
 
-    for row in range(0, rows):  # go through each row individually
+    for columns_header_column in columns_header_columns:
+        table[0].append(columns_header_column.text)
+
+    for row in range(1, rows):  # go through each row individually
         table.append([])  # add empty list for all cells of this row
         print(Fore.LIGHTYELLOW_EX + str(int(row / rows * 100)) + '%...' + Fore.LIGHTWHITE_EX)  # print out progress
 
@@ -32,10 +35,10 @@ def list_table(driver: webdriver):
             table[row].append([])
 
             # get all links that are in this cell
-            links = details_row_cells[row * cols + col].find_elements(By.TAG_NAME, 'a')
+            links = details_row_cells[(row - 1) * cols + col].find_elements(By.TAG_NAME, 'a')
 
             # get content (text) that is in this cell # remove icon character if necessary
-            content = details_row_cells[row * cols + col].text.replace('', '', 1)
+            content = details_row_cells[(row - 1) * cols + col].text.replace('', '', 1)
 
             # assign placeholders (from content) to their links and add element list containing the data
             while len(links) > 0:
@@ -43,13 +46,13 @@ def list_table(driver: webdriver):
                 try:
                     table[row][col].append(
                         [content[0:content.index('\n', 0, len(content))], links[0].get_attribute('href')])
-                except:
+                except ValueError:
                     table[row][col].append([content[0:len(content)], links[0].get_attribute('href')])
 
                 # cut content string
                 try:
                     content = content[content.index('\n', 0, len(content)) + 1:len(content)]
-                except:
+                except ValueError:
                     content = ''
 
                 # remove link from links
@@ -60,16 +63,14 @@ def list_table(driver: webdriver):
                 # append next substring from content
                 try:
                     table[row][col].append([content[0:content.index('\n', 0, len(content))]])
-                except:
+                except ValueError:
                     table[row][col].append([content[0:len(content)]])
-
                 # cut content string
                 try:
                     content = content[content.index('\n', 0, len(content)) + 1:len(content)]
-                except:
+                except ValueError:
                     content = None
 
     print(Fore.LIGHTGREEN_EX + 'Done' + Fore.WHITE)  # print out progress
-    # print(table)
 
-
+    return table
