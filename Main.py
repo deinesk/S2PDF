@@ -20,8 +20,9 @@ options.add_argument("user-data-dir=C:\\Users\\kai-leon.deines\\AppData\\Local\\
 driver = webdriver.Chrome(service=s, options=options)
 # driver.set_window_size(1920, 1080) # window size
 # load page
-# TODO: implement gui for entering url and config
-# TODO: if unable to authorise, require user to log in once
+# TODO: GUI
+# TODO: login
+# TODO: config editor (pages, subpages, table columns, save password?)
 #driver.get(
 #    'https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozessrollen.aspx?csf=1&web=1&e=mcAB0z')
 #time.sleep(2)  # wait for page to load
