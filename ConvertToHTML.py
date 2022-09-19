@@ -26,6 +26,7 @@ def list_table(table: list):
                     for e in col:
                         # an element list contains only one or two items (content and/or link)
                         if len(e) == 2:
+                            # TODO: replace links
                             html = html + '<a href="' + str(e[1]) + '">' + str(e[0]) + '</a>\n'
                         else:
                             html = html + '<p>' + str(e[0]) + '</p>\n'

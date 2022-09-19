@@ -9,6 +9,24 @@ from colorama import Fore
 
 
 # methods
+def reg_page(driver: webdriver):
+    main_content = driver.find_element(By.CSS_SELECTOR, '[data-automation-id=contentScrollRegion]')
+    title = main_content.find_element(By.CSS_SELECTOR, '[data-automation-id=TitleTextId]').text
+    author = main_content.find_element(By.CSS_SELECTOR, '[data-automation-id=authorByLine]').text
+    canvas = main_content.find_element(By.CSS_SELECTOR, '[data-automation-id=Canvas]')
+    canvas_zones = canvas.find_elements(By.CSS_SELECTOR, '[data-automation-id=CanvasZone]')
+    for canvas_zone in canvas_zones:
+        canvas_controls = canvas_zone.find_elements(By.CSS_SELECTOR, '[data-automation-id=CanvasControl]')
+        for canvas_control in canvas_controls:
+            print('placeholder')
+
+    return {
+        "title": title,
+        "author": author,
+
+    }
+
+
 def list_table(driver: webdriver):
     # get data
     columns_header_columns = driver.find_elements(By.CSS_SELECTOR,
