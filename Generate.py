@@ -6,25 +6,110 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from colorama import Fore
+import re
 
+def rfind_nth(string: str, substring: str, n: int):
+    if n == 1:
+        return string.rfind(substring)
+    else:
+        return string.rfind(substring, 0, rfind_nth(string, substring, n-1)-1)
 
+def childify(html: str, web_element: webdriver):
+
+    children = web_element.find_elements(By.XPATH, './*')
+    for child in children:
+
+        # h, p, a, div
+        if re.match(r"^h+", child.tag_name):
+            html.replace(child.text, "")
+            html = html + "<"+ child.tag_name+">" + child.text + "</"+ child.tag_name+">"
+        elif child.tag_name == "p":
+            html.replace(child.text, "")
+            html = html + "<p>" + child.text
+            html = childify(html, child)
+            html = html + "</p>"
+        elif child.tag_name == "a":
+
+            html = html + "<a href='#'>" + child.text + "</a>"   # TODO: set a link
+        elif child.tag_name == "strong":
+            html.replace(child.text, "")
+            html = html + "<strong style='font-weight:bold;'>" + child.text + "/<strong>"
+        # ol, ul, li
+        elif child.tag_name == "div":
+            html.replace(child.text, "")
+            html = html + "<div>"
+            html = childify(html, child)
+            html = html + "</div>"
+        elif child.tag_name == "ol":
+            html.replace(child.text, "")
+            html = html + "<ol>" + child.text
+            html = childify(html, child)
+            html = html + "</ol>"
+        elif child.tag_name == "ul":
+            html.replace(child.text, "")
+            html = html + "<ul>" + child.text
+            html = childify(html, child)
+            html = html + "</ul>"
+        elif child.tag_name == "li":
+            html.replace(child.text, "")
+            html = html + "<li>" + child.text
+            html = childify(html, child)
+            html = html + "</li>"
+
+        # TODO: tables
+
+    return html
 # methods
-def reg_page(driver: webdriver):
-    main_content = driver.find_element(By.CSS_SELECTOR, '[data-automation-id=contentScrollRegion]')
-    title = main_content.find_element(By.CSS_SELECTOR, '[data-automation-id=TitleTextId]').text
-    author = main_content.find_element(By.CSS_SELECTOR, '[data-automation-id=authorByLine]').text
-    canvas = main_content.find_element(By.CSS_SELECTOR, '[data-automation-id=Canvas]')
-    canvas_zones = canvas.find_elements(By.CSS_SELECTOR, '[data-automation-id=CanvasZone]')
+def reg_page(driver: webdriver, html_sub: [str]):
+    page_header = driver.find_element(By.CSS_SELECTOR, '[data-automation-id=pageHeader]')
+    title = page_header.find_element(By.CSS_SELECTOR, '[data-automation-id=TitleTextId]').text
+    author = page_header.find_element(By.CSS_SELECTOR, '[data-automation-id=authorByLine]').text
+
+    print(title)
+    print(author)
+    html = "<h1>" + title + "</h1>"
+    html = html + "<p>" + author + "</p>"
+
+    canvas = driver.find_element(By.CSS_SELECTOR, '[data-automation-id=Canvas]')
+    canvas_zones = canvas.find_elements(By.CSS_SELECTOR, '[data-automation-id=CanvasSection]')
+
     for canvas_zone in canvas_zones:
         canvas_controls = canvas_zone.find_elements(By.CSS_SELECTOR, '[data-automation-id=CanvasControl]')
         for canvas_control in canvas_controls:
-            print('placeholder')
+            try:
+                canvas_control.find_element(By.CSS_SELECTOR, '[data-viewport-id*=DividerWebPart]')
+                html = html + "<hr style='border-top:8px solid #bbb; border-radius:5px'>"
+                print("______________________________________________________________________________")
+            except:
+                print()
+            try:
+                canvas_control.find_element(By.CSS_SELECTOR, '[data-viewport-id*=ListWebPart]')
+                if html_sub.len > 0:
+                    html = html + html_sub[0]
+                    html_sub.pop(0)
+                else:
+                    html = html + "subpage not found"
+                print("subpage!")
+            except:
+                print()
+            try:
+                print("versuche bild zu finden")
+                image = canvas_control.find_element(By.TAG_NAME, "img")
+                print("bild gefunden!")
+                #image_source = image.get_attribute('data-sp-originalimgsrc')
+                # TODO: add image
+                print('ein bild!')
+            except:
+                print()
+            try:
+                canvas_control.find_element(By.CSS_SELECTOR, '[data-automation-id=textBox]')
+                text_box = canvas_control.find_element(By.CSS_SELECTOR, '[data-automation-id=textBox]')
+                html = childify(html, text_box)
 
-    return {
-        "title": title,
-        "author": author,
+            except:
+                print()
 
-    }
+    return html
 
 
 def list_table(driver: webdriver):

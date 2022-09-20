@@ -9,6 +9,8 @@ import ConvertToHTML
 import Generate
 import time
 import json
+import pdfkit
+from pdfkit.api import configuration
 
 # driver set up
 print('setting up driver...')
@@ -45,13 +47,15 @@ def parse_list_page():
 def parse_reg_page(html_sub):
     # TODO: add other elements
     # TODO: append html_sub if ListWebPart is found
+
+
+
     return ""
 
 
 def parse_page(page):
 
     # TODO: document lists
-
     html_sub = []
     for sub in page['sub']:
         html_sub.append(parse_page(sub))
@@ -73,6 +77,7 @@ def parse_page(page):
             print('no content found')
 
 
+"""""
 content = ""
 for page in data['pages']:
    content = content + parse_page(page)
@@ -84,8 +89,30 @@ for page in data['pages']:
 f = open('output.html', 'wb')
 # print(data['pages'][0])
 f.write(content.encode())
-
 f.close()
+
+"""""
+driver.get('https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozesse.aspx?csf=1&web=1&e=MFa5C7')
+
+f = open('source_debug.html', 'wb')
+f.write(driver.page_source.encode())
+f.close()
+f = open('regtest.html', 'wb')
+f.write(Generate.reg_page(driver, "").encode())
+f.close()
+
+
 
 driver.close()
 
+
+
+
+
+
+
+
+
+# finally convert to pdf
+#pdfkit_path = pdfkit.configuration(wkhtmltopdf = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+#pdfkit.from_file('output.html', 'test.pdf', configuration=pdfkit_path)
