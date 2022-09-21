@@ -5,7 +5,7 @@
 
 def list_table(table: list):
     # construct html table from list
-    html = '<html><meta charset="utf-8"><body><style>body,table{font-family:"Tahoma";font-size:12px;}table,tr,th,' \
+    html = '<style>body,table{font-family:"Tahoma";font-size:12px;}table,tr,th,' \
            'td{border:1px solid black;border-collapse:collapse;vertical-align:top;}th{background:#ccc}</style><table> '
 
     # fill in the cells
@@ -35,6 +35,6 @@ def list_table(table: list):
 
                 html = html + '</tr>'
 
-    html = html + '</table></body></html>'
+    html = html + '</table>'
 
     return html

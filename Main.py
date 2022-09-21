@@ -10,7 +10,6 @@ import Generate
 import time
 import json
 import pdfkit
-from pdfkit.api import configuration
 
 # driver set up
 print('setting up driver...')
@@ -25,9 +24,6 @@ driver = webdriver.Chrome(service=s, options=options)
 # TODO: GUI
 # TODO: login
 # TODO: config editor (pages, subpages, table columns, save password?)
-#driver.get(
-#    'https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozessrollen.aspx?csf=1&web=1&e=mcAB0z')
-#time.sleep(2)  # wait for page to load
 
 ###################
 # work from here
@@ -38,52 +34,47 @@ with open('config.json', 'r') as f:
 
 
 def parse_list_page():
-    # TODO: fix links
     # TODO: fix icons
     return ConvertToHTML.list_table(
         Generate.list_table(driver))
 
 
 def parse_reg_page(html_sub):
-    # TODO: add other elements
-    # TODO: append html_sub if ListWebPart is found
+    return Generate.reg_page(driver, html_sub)
 
 
-
-    return ""
-
-
-def parse_page(page):
-
+def parse_page(webpage):
     # TODO: document lists
     html_sub = []
-    for sub in page['sub']:
-        html_sub.append(parse_page(sub))
+    for sub in webpage['sub']:
+        if sub != "":
+            html_sub.append(parse_page(sub))
 
-    driver.get(page['link'])
+    if webpage['link'] != '':
+        driver.get(webpage['link'])
+    else:
+        return
     time.sleep(2)
     # list page
     try:
         if driver.find_element(By.CSS_SELECTOR, '[data-automationid=main-app-content]'):
-            print("helo")
             return parse_list_page()
     # regular page
-    except:
+    except Exception as e:
         try:
             if driver.find_element(By.CSS_SELECTOR, '[data-automation-id=contentScrollRegion]'):
                 return parse_reg_page(html_sub)
 
-        except:
+        except Exception as ee:
+            print(ee)
             print('no content found')
+        print(e)
 
 
-"""""
-content = ""
+content = '<html><meta charset="utf-8">'
 for page in data['pages']:
-   content = content + parse_page(page)
-
-
-
+    content = content + parse_page(page)
+content = content + '</html>'
 
 # write file
 f = open('output.html', 'wb')
@@ -92,27 +83,14 @@ f.write(content.encode())
 f.close()
 
 """""
-driver.get('https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozesse.aspx?csf=1&web=1&e=MFa5C7')
-
 f = open('source_debug.html', 'wb')
+driver.get("https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozessrollen.aspx?csf=1&web=1&e=mcAB0z")
 f.write(driver.page_source.encode())
 f.close()
-f = open('regtest.html', 'wb')
-f.write(Generate.reg_page(driver, "").encode())
-f.close()
 
-
-
+"""""
 driver.close()
 
-
-
-
-
-
-
-
-
 # finally convert to pdf
-#pdfkit_path = pdfkit.configuration(wkhtmltopdf = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
-#pdfkit.from_file('output.html', 'test.pdf', configuration=pdfkit_path)
+pdfkit_path = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+pdfkit.from_file('output.html', 'output.pdf', configuration=pdfkit_path)
