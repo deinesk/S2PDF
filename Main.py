@@ -1,6 +1,7 @@
 # =========================
 # Author: Kai Leon Deines
 # =========================
+import os
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -16,7 +17,7 @@ print('setting up driver...')
 s = Service('C:\\Program Files (x86)\\chromedriver.exe')
 options = webdriver.ChromeOptions()
 # TODO: provide 'empty' user profile
-options.add_argument("user-data-dir=C:\\Users\\kai-leon.deines\\AppData\\Local\\Google\\Chrome\\UserDataSelenium")
+options.add_argument("user-data-dir=C:\\Users\\" + os.getenv('username') + "\\AppData\\Local\\Google\\Chrome\\UserDataS2PDF")
 # options.add_argument("--headless")
 driver = webdriver.Chrome(service=s, options=options)
 # driver.set_window_size(1920, 1080) # window size
@@ -77,20 +78,14 @@ for page in data['pages']:
 content = content + '</html>'
 
 # write file
-f = open('output.html', 'wb')
+f = open('output/sharepoint_' + time.strftime("%Y%m%d_%H%M") + '.html', 'wb')
 # print(data['pages'][0])
 f.write(content.encode())
 f.close()
 
-"""""
-f = open('source_debug.html', 'wb')
-driver.get("https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozessrollen.aspx?csf=1&web=1&e=mcAB0z")
-f.write(driver.page_source.encode())
-f.close()
 
-"""""
 driver.close()
 
 # finally convert to pdf
 pdfkit_path = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
-pdfkit.from_file('output.html', 'output.pdf', configuration=pdfkit_path)
+pdfkit.from_file('output/sharepoint_' + time.strftime("%Y%m%d_%H%M") + '.html', 'output/sharepoint_' + time.strftime("%Y%m%d_%H%M") + '.pdf', configuration=pdfkit_path)
