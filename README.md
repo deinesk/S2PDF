@@ -7,7 +7,7 @@ SharePoint to PDF Converter
 - pdfkit
 
 ## Setup
-- Install the latest version of [Chrome Web Driver](https://chromedriver.chromium.org/downloads) in `C:\Program Files (x86)`.
+- Download the latest version of [Chrome Web Driver](https://chromedriver.chromium.org/downloads) and move the .exe to `C:\Program Files (x86)`.
 - Install selenium package using package manager or terminal:
     ```
     pip install selenium

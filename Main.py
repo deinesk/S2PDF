@@ -1,7 +1,9 @@
 # =========================
 # Author: Kai Leon Deines
 # =========================
+import errno
 import os
+import re
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -11,19 +13,26 @@ import Generate
 import time
 import json
 import pdfkit
+import ctypes
 
 # driver set up
 print('setting up driver...')
 s = Service('C:\\Program Files (x86)\\chromedriver.exe')
 options = webdriver.ChromeOptions()
-# TODO: provide 'empty' user profile
-options.add_argument("user-data-dir=C:\\Users\\" + os.getenv('username') + "\\AppData\\Local\\Google\\Chrome\\UserDataS2PDF")
+options.add_argument(
+    "user-data-dir=C:\\Users\\" + os.getenv('username') + "\\AppData\\Local\\Google\\Chrome\\UserDataS2PDF")
 # options.add_argument("--headless")
 driver = webdriver.Chrome(service=s, options=options)
-# driver.set_window_size(1920, 1080) # window size
-# load page
+driver.get('https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung')
+loggedin = False
+while not loggedin:
+    try:
+        driver.find_element(By.CSS_SELECTOR, '[id=O365_NavHeader]')
+        loggedin = True
+    except:
+        time.sleep(2)
+
 # TODO: GUI
-# TODO: login
 # TODO: config editor (pages, subpages, table columns, save password?)
 
 ###################
@@ -32,6 +41,10 @@ driver = webdriver.Chrome(service=s, options=options)
 
 with open('config.json', 'r') as f:
     data = json.load(f)
+
+dest = str(data['dest'])
+if not re.search('/$', dest):
+    dest = dest + '/'
 
 
 def parse_list_page():
@@ -78,14 +91,25 @@ for page in data['pages']:
 content = content + '</html>'
 
 # write file
-f = open('output/sharepoint_' + time.strftime("%Y%m%d_%H%M") + '.html', 'wb')
+try:
+    os.makedirs(os.path.dirname(dest))
+except OSError as exc:
+    if exc.errno != errno.EEXIST:
+        raise
+
+date_and_time = time.strftime("%Y%m%d_%H%M")
+
+f = open(dest + 'sharepoint_' + date_and_time + '.html', 'wb')
 # print(data['pages'][0])
 f.write(content.encode())
 f.close()
-
 
 driver.close()
 
 # finally convert to pdf
 pdfkit_path = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
-pdfkit.from_file('output/sharepoint_' + time.strftime("%Y%m%d_%H%M") + '.html', 'output/sharepoint_' + time.strftime("%Y%m%d_%H%M") + '.pdf', configuration=pdfkit_path)
+pdfkit.from_file(dest + 'sharepoint_' + date_and_time + '.html', dest + 'sharepoint_' + date_and_time + '.pdf',
+                 configuration=pdfkit_path)
+
+ctypes.windll.user32.MessageBoxW(0, "Die Komvertierung der gewählten SharePoint-Seiten wurde erfolgreich abgeschlossen", "Abgeschlossen.", 0)
+print("You can now close this window.")

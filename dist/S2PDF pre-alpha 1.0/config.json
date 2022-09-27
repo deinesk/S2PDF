@@ -1,0 +1,54 @@
+{
+  "dest": "output/",
+  "pages": [
+    {
+      "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozesse.aspx?csf=1&web=1&e=MFa5C7",
+      "sub": [
+        {
+          "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozesse/AllItems.aspx?viewid=cae6aa6f%2D69ca%2D4587%2D8cfd%2D04ae52829a8e",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozessrollen.aspx?csf=1&web=1&e=mcAB0z",
+      "sub": [
+        {
+          "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/AllItems.aspx?viewid=3dc33198%2D464a%2D4132%2Dbd86%2D4b47a5eabeec",
+          "sub": ""
+        },
+        {
+          "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/AllItems.aspx?viewid=659e21dd%2D45c5%2D45d9%2Da92b%2Db6bdec08e432",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Vorlagen.aspx?csf=1&web=1&e=H2s0c3",
+      "sub": [
+        {
+          "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SiteAssets/Forms/AllItems.aspx?viewid=9945a765%2D47a8%2D45a3%2D883f%2D550cfd03e285",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Methodensammlung.aspx",
+      "sub": [
+        {
+          "link": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Methoden/Forms/AllItems.aspx?viewid=128fd0a0%2D2829%2D4fdc%2D8494%2Ddf7a563a4aba",
+          "sub": ""
+        }
+      ]
+    },
+    {
+      "link": "https://mybender.sharepoint.com/:u:/r/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/021_FSE.1%20FuSi-Konzeptphase.aspx?csf=1&web=1&e=NHPa1f",
+      "sub": [
+        {
+          "link": "",
+          "sub": ""
+        }
+      ]
+    }
+  ]
+}
