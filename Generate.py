@@ -3,17 +3,9 @@
 # =========================
 import random
 import string
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import re
-
-
-def rfind_nth(string: str, substring: str, n: int):
-    if n == 1:
-        return string.rfind(substring)
-    else:
-        return string.rfind(substring, 0, rfind_nth(string, substring, n - 1))
 
 def last_tag(html: str):
     index = html.rfind("<")
@@ -25,9 +17,6 @@ def find_last_open_tag(html):
     while re.match(r"^(</)", lt):
         lt = last_tag(html[0:html.rfind(lt)])
     return lt
-def parent_tag_name(html: str):
-    lt = find_last_open_tag(html)
-    return lt[1:len(lt)]
 
 
 def childify(html: str, web_element: webdriver):
@@ -43,6 +32,10 @@ def childify(html: str, web_element: webdriver):
                     html = html1 + "<a href='#'>" + child.text + "</a>" + html2  # TODO: set link
                 else:
                     html = html + "<a href='#'>" + child.text + "</a>"  # TODO: set link
+        elif child.get_attribute('class') == 'od-PdfViewer-container':
+            html = html + str(child.get_attribute('innerHTML'))
+        elif child.get_attribute('class') == "ReactFieldEditor-MoreToggle":
+            html = html
         elif child.tag_name == "strong":
             lot = find_last_open_tag(html)
             html1 = html[0:html.rfind(lot)]
@@ -56,34 +49,33 @@ def childify(html: str, web_element: webdriver):
             html = html + '<strong style="font-weight:bold;">' + child.text
             html = childify(html, child)
             html = html + "</strong>"
-
-        elif re.match(r"^h+", child.tag_name) or child.tag_name == "u" or child.tag_name == "p" or child.tag_name == \
-                "div":
-
+        elif re.match(r"^h+", child.tag_name) or child.tag_name == "u" or child.tag_name == "p" or child.tag_name == "div" or child.tag_name == "label":
             html1 = html[0:html.rfind(">") + 1]
             html2 = html[html.rfind(">") + 1:len(html)]
             html2 = html2.replace(child.text, '')
             html = html1 + html2 + "<" + child.tag_name + ">" + child.text
             html = childify(html, child)
             html = html + "</" + child.tag_name + ">"
+        elif child.tag_name == "i":
+            html = html.replace(child.text, '')
 
+        # TODO: div wird nicht ordnungsgemäß geschlossen / syntaxfehler
+
+        # TODO: Bereich in dem nach child.text gesucht wird auf parent beschränken # bei kurzen EInträgen sonst ggf.
+        #  ungewollte Löschung einzelner Worte aus anderen Inhalten
         elif child.tag_name == "ol" or child.tag_name == "ul" or child.tag_name == "li":
             html = html.replace(child.text, "")
             html = html + "<" + child.tag_name + ">" + child.text
             html = childify(html, child)
             html = html + "</" + child.tag_name + ">"
-
         elif child.tag_name == "table":
-
             html = html.replace(child.text, "")
             inner_html = str(child.get_attribute('innerHTML'))
-
             while inner_html.find('<td ') != -1:
                 i = inner_html.find('<td ')
                 a = inner_html[0:i+3]
                 b = inner_html[inner_html.find('>', i+3):len(inner_html)]
                 inner_html = a+b
-
             a = inner_html.find("<tr>")
             b = inner_html.find("</tr>")
             aa = inner_html[0:a]
@@ -92,30 +84,36 @@ def childify(html: str, web_element: webdriver):
             cc = inner_html[b+5:len(inner_html)]
             inner_html = aa+bb+cc
             html = html + "<table>" + inner_html + "</table>"
-
-        elif child.tag_name == "td":
-            html1 = html[0:html.rfind(">") + 1]
-            html2 = html[html.rfind(">") + 1:len(html)]
-            html2 = html2.replace(child.text, '')
-            print(html[html.rfind("<tr>")-7:html.rfind("<tr>")])
-            comp = html[html.rfind("<tr>")-7:html.rfind("<tr>")]
-            if comp == "<tbody>":
-                # if child.get_attribute("role") == "columnheader":
-                html = html1 + html2 + "<th>" + child.text
-                print("header!")
-            else:
-                html = html1 + html2 + "<" + child.tag_name + ">" + child.text
-            html = childify(html, child)
-            if comp == "<tbody>":
-                # if child.get_attribute("role") == "columnheader":
-                html = html + "</th>"
-            else:
-                html = html + "</" + child.tag_name + ">"
+        elif child.tag_name == 'img':
+            id = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
+            with open("assets/" + id + '.png', 'wb') as f:
+                f.write(child.screenshot_as_png)
+            html = html + "<img src='assets/" + id + ".png'>"
 
     return html
 
 
 # methods
+
+def react_field_page(driver: webdriver):
+    html = ''
+    more_toggles = driver.find_elements(By.CLASS_NAME, 'ReactFieldEditor-MoreToggle')
+    for more_toggle in more_toggles:
+        more_toggle.click()
+
+    react_fields = driver.find_elements(By.CSS_SELECTOR, '[data-automationtype=clientFormField]')
+    for react_field in react_fields:
+        html = html + '<div>'
+        if react_field == react_fields[0]:
+            html = html + '<h2>' + react_field.text.replace(react_field.find_element(By.TAG_NAME,'label').text, '') + '</h2>'
+        else:
+            html = childify(html, react_field)
+        html = html + '</div>'
+
+
+    return html
+
+
 def reg_page(driver: webdriver, html_sub: list[str]):
     page_header = driver.find_element(By.CSS_SELECTOR, '[data-automation-id=pageHeader]')
     title = page_header.find_element(By.CSS_SELECTOR, '[data-automation-id=TitleTextId]').text

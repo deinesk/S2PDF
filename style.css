@@ -1,0 +1,26 @@
+body {
+    font-family: "Tahoma";
+    font-size: 10pt;
+    background: #fff;
+}
+
+table, tr, th, td {
+    border: 1px solid green;
+    border-collapse: collapse;
+    vertical-align: top;
+    background: #fff;
+}
+
+th {
+    border-bottom: 2px solid green;
+    background: #eee;
+}
+
+th, td {
+    padding: 5px;
+}
+
+label {
+    font-size: 11pt;
+    font-weight: bold;
+}

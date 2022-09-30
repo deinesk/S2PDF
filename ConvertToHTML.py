@@ -5,8 +5,7 @@
 
 def list_table(table: list):
     # construct html table from list
-    html = '<style>body,table{font-family:"Tahoma";font-size:12px;}table,tr,th,' \
-           'td{border:1px solid black;border-collapse:collapse;vertical-align:top;}th{background:#ccc}</style><table> '
+    html = '<table> '
 
     # fill in the cells
     for row in table:
