@@ -30,6 +30,10 @@ SharePoint to PDF Converter
 2. Optionally edit [layout.json](layout.json) to add/remove pages and order them.
 3. Start the conversion by running [Main.py](Main.py). The output files can be found in `/out`.
 
+## Hint
+To keep conversion times short for testing purposes, not every page is included in the output. You can change this, however, by altering the function call of `read_pages()`.
+Only selecting page 0 and setting `ignore_children` to `False` in the function call will output everything as it is defined in [layout.json](layout.json)
+
 ## Known Issues
 - Images are low resolution
 - Icons in tables are missing

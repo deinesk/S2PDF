@@ -393,7 +393,9 @@ patience = 6 # loading time for each page
 driver = set_up_driver()
 reference_map = {}
 reference_map.setdefault("#")
+
 read_pages([100, 200, 201, 202, 300, 301, 302, 400, 500], True)
+
 update_references()
 
 driver.quit()
