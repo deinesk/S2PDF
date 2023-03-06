@@ -9,6 +9,9 @@ import json
 from time import sleep
 import random
 import string
+import pyautogui
+
+from selenium.webdriver.common.keys import Keys
 
 import pdftest
 
@@ -43,16 +46,21 @@ def append_page(page_id, ignore_children):
 
     # manipulating soup
     add_reference(soup, page)
-    decompose(soup, {'div[id="spCommandBar"]', 'div[id="CommentsWrapper"]', 'div[class="ReactFieldEditor-MoreToggle"]',
-                     "i", "iframe"})
+    decompose(soup,
+              {'div[id="spCommandBar"]', 'span[class*="accessibleLabel"]', 'figcaption', 'div[id="CommentsWrapper"]',
+               'div[class="ReactFieldEditor-MoreToggle"]',
+               })
+    decompose_empty_icons(soup)
     decompose_third_parent(soup, {'div[class="ReactFieldEditor-placeHolder"]'})
     decompose_empty_buttons(soup)
     fix_headlines(soup)
     shift_headlines(soup, page)
     avoid_inside_page_breaks(soup)
+    fix_table_headers(soup)
     process_lists(soup)
     process_embeds(soup)
     process_images(soup)
+
     # process_embeds_as_pdf(soup) # won't be rendered by pdfkit
 
     # append the html to output
@@ -102,6 +110,7 @@ def update_a_tags(soup):
             if a_tag.text == "":
                 a_tag.decompose()
 
+
 def update_buttons(soup):
     # update buttons
     buttons = soup.select("button")
@@ -134,6 +143,13 @@ def decompose_third_parent(soup, tag_names):
             item.parent.parent.parent.decompose()
 
 
+def decompose_empty_icons(soup):
+    icons = soup.select("i")
+    for icon in icons:
+        if not icon.find("img"):
+            icon.decompose()
+
+
 def decompose_empty_buttons(soup):
     # removing useless buttons
     buttons = soup.select("button")
@@ -152,7 +168,7 @@ def fix_headlines(soup):
     bcbs = soup.select('ul[class="BreadcrumbBar-list"]')
     for bcb in bcbs:
         items = bcb.select("li")
-        bcb.replace_with(BeautifulSoup("<h1>"+items[len(items)-1].text+"</h1>", "html.parser"))
+        bcb.replace_with(BeautifulSoup("<h1>" + items[len(items) - 1].text + "</h1>", "html.parser"))
 
     # role pages headlines
     items = soup.select("label")
@@ -179,78 +195,44 @@ def process_images(soup):
     for image in images:
         src = image["src"]
         if src == "":
+            image.decompose()
             return
         try:
             driver.get(src)
         except:
             try:
                 driver.get("https://mybender.sharepoint.com" + src)
-                sleep(1)
             except:
                 print("WARNUNG: Ungültiger Link '" + src + "'")
 
         img_id = ''.join(random.choice(letters) for _ in range(10))
-        if not os.path.exists('out/media'):
-            os.makedirs('out/media')
         with open("out/media/" + img_id + ".png", "wb") as png:
-
             try:
                 png.write(driver.find_element_by_tag_name("img").screenshot_as_png)
             except:
                 try:
                     png.write(driver.find_element_by_tag_name("svg").screenshot_as_png)
+                    image["width"] = "20px"
                 except:
                     print("WARNUNG: Die Datei '" + src + "' konnte nicht gefunden werden.")
         image["src"] = "media/" + img_id + ".png"
+        if image.parent.name == "i":
+            image.parent.replace_with(image)
 
 
 def process_embeds(soup):
-    # save and link embeds
-    embeds = soup.select('div[data-automation-id="DocumentEmbed"]')
-    for embed in embeds:
-        iframes = embed.select('div[class="canvasWrapper"]')
-        letters = string.ascii_lowercase
-        for iframe in iframes:
-            img_id = ''.join(random.choice(letters) for _ in range(10))
-            with open("out/media/" + img_id + ".png", "wb") as png:
-                png.write(iframe.screenshot_as_png)
-                embed.replace_with(soup.new_tag('<img src="media/' + img_id + '.png"></img'))
-
-
-def process_embeds_as_pdf(soup):
     # downloading and embedding pdfs
     embeds = soup.select('div[data-automation-id="DocumentEmbed"]')
-    print(str(soup))
     for embed in embeds:
-        print("EMBED")
-        iframe = embed.select("iframe")[0]
-
-        driver.get(iframe["src"])
-        sleep(2)
-        big_soup = BeautifulSoup(driver.page_source, "lxml")
-        scripts = big_soup.find_all("script")
-        for script in scripts:
-            if ".spItemUrl" in script.text:
-                data = script.text
-                data = data[data.index(".spItemUrl"):len(data)]
-                url = data
-                data = data[data.index("\"path\":\"") + 8:len(data)]
-                data = data[0:data.index("\"")]
-                data = data.replace(" ", "%20")
-
-                url = url[url.index("\"downloadUrl\":\"") + 15:len(url)]
-                end = url.index("Bereichsveroeffentlichung") + 26
-                url = url[0:end]
-
-                print("Downloading: " + url + data)
-                driver.get(url + data)
-                sleep(5)
-                embed.replace_with(BeautifulSoup('<div style="aspect-ratio:0.82;width:30vw;overflow-y:hidden;'
-                                                 'overflow-x:hidden"><embed src="media/'
-                                                 + data[data.index("/") + 1:len(data)] +
-                                                 '#view=FitV&toolbar=0&scrollbar=0"width="105%" '
-                                                 'style="margin-left:-3%;margin-top:-1%;" height="105%" '
-                                                 'type="application/pdf"></div>', "html.parser"))
+        iframes = embed.select("iframe")
+        letters = string.ascii_lowercase
+        for iframe in iframes:
+            driver.get(iframe["src"])
+            sleep(patience)
+            img_id = ''.join(random.choice(letters) for _ in range(10))
+            with open("out/media/" + img_id + ".png", "wb") as png:
+                png.write(driver.find_element_by_class_name("canvasWrapper").screenshot_as_png)
+                embed.replace_with(soup.new_tag('img src="media/' + img_id + '.png"'))
 
 
 def process_lists(soup):
@@ -310,6 +292,18 @@ def avoid_inside_page_breaks(soup):
         canvas_control["class"] = "avoidInsidePageBreak"
 
 
+def fix_table_headers(soup):
+    tables = soup.select("table")
+    for table in tables:
+        tr = table.select("tr")[0]
+        table_datas = tr.select("td")
+        for table_data in table_datas:
+            table_data.name = "th"
+        thead = soup.new_tag("thead")
+        thead.insert(0, tr)
+        table.insert(0, thead)
+
+
 def append_children(page):
     for child in page["children"]:
         append_page(child, False)
@@ -329,6 +323,8 @@ def set_up_driver():
                                      "download.extensions_to_open": "applications/pdf"})
     d = webdriver.Chrome(executable_path=path, options=options)
     d.maximize_window()
+    d.set_window_size(1080, 1920)
+    d.set_window_position(420, -420)
     return d
 
 
@@ -345,7 +341,8 @@ def add_reference(soup, page):
     try:
         reference_map[str(url[str(url).index("/sites"):str(url).index(".aspx") + 11])] = page_id
         if phantom_url is not None:
-            reference_map[str(phantom_url[str(phantom_url).index("/sites"):str(phantom_url).index(".aspx") + 11])] = page_id
+            reference_map[
+                str(phantom_url[str(phantom_url).index("/sites"):str(phantom_url).index(".aspx") + 11])] = page_id
     except:
         pass
     spans = soup.select("span")
@@ -367,6 +364,7 @@ def add_reference(soup, page):
 
 def load_page(url):
     driver.get(url)
+    scroll_down()
     sleep(patience)
     try:
         html_source = driver.find_element_by_class_name("Files-content").get_attribute("innerHTML")
@@ -378,27 +376,45 @@ def load_page(url):
     return html_source
 
 
-if not os.path.exists('out'):
-    os.makedirs('out')
-# create new output file
-with open("out/output.html", "w", encoding="utf-8") as output:
-    output.write("<meta charset='utf-8'><link rel=\"stylesheet\" href=\"../style.css\">")
+def scroll_down():
+    pyautogui.moveTo(960, 540)
+    try:
+        body = driver.find_element_by_css_selector('div[data-automation-id="contentScrollRegion"]')
+        for i in range(0, 100):
+            body.send_keys(Keys.ARROW_DOWN)
+    except:
+        pass
 
-# read json file
+
+def init():
+    # making sure necessary directories exist
+    if not os.path.exists('out'):
+        os.makedirs('out')
+
+    if not os.path.exists('out/media'):
+        os.makedirs('out/media')
+
+    # creating new output file
+    with open("out/output.html", "w", encoding="utf-8") as output:
+        output.write("<meta charset='utf-8'><link rel=\"stylesheet\" href=\"../style.css\">")
+    output.close()
+
+
+init()
+# read json files
 with open("layout.json", "r", encoding="utf-8") as f:
     # returns json object as a dictionary
     layout = json.load(f)
-
-patience = 6 # loading time for each page
+    f.close()
+with open("config.json", "r", encoding="utf-8") as c:
+    config = json.load(c)
+    c.close()
+# 'patience' is the loading time for each page in seconds
+patience = float(config["patience"])
 driver = set_up_driver()
 reference_map = {}
 reference_map.setdefault("#")
-
-read_pages([100, 200, 201, 202, 300, 301, 302, 400, 500], True)
-
+read_pages([0], False)
 update_references()
-
 driver.quit()
-f.close()
-
 pdftest.convert_to_pdf()

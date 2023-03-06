@@ -40,3 +40,4 @@ Only selecting page 0 and setting `ignore_children` to `False` in the function c
 - Sometimes a word appears two times in a row (like 'WordWord')
 - Currently, there's no feature that allows to select which columns of a table should be visible
 - Some content is weirdly positioned
+- Some tables headers are still missing after page break
