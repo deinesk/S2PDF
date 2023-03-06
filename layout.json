@@ -1,0 +1,531 @@
+{
+  "pages": [
+    {
+      "id": 0,
+      "label": "master",
+      "layer": 0,
+      "url": "",
+      "children": [
+        100, 200, 300, 400, 500
+      ]
+    },
+    {
+      "id": 100,
+      "label": "start",
+      "layer": 0,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 200,
+      "label": "prozesse",
+      "layer": 0,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozesse.aspx?csf=1&web=1&e=MFa5C7",
+      "children": [
+        201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225
+      ]
+    },
+    {
+      "id": 300,
+      "label": "prozessrollen",
+      "layer": 0,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Prozessrollen.aspx?csf=1&web=1&e=mcAB0z",
+      "children": [
+        301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,
+        351,352,353,354
+      ]
+    },
+    {
+      "id": 400,
+      "label": "vorlagen",
+      "layer": 0,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Vorlagen.aspx?csf=1&web=1&e=H2s0c3",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 500,
+      "label": "methoden",
+      "layer": 0,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/Methodensammlung.aspx",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 201,
+      "label": "projektmanagement",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/001_MAN.3%20Projektmanagement.aspx?csf=1&web=1&e=8h5QNi&cid=9bf94498-7bb9-4943-b9d6-28513958c73a",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 202,
+      "label": "fusi-management",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/002_FSM.1%20FuSi-Management.aspx?csf=1&web=1&e=hjwWXs&cid=a6784f8e-d884-498b-b6a9-e1ecf5f973e4",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 203,
+      "label": "konfigurationsmanagement",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/012_SUP.8%20Konfigurationsmanagement.aspx",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 204,
+      "label": "qualitätssicherung",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/013_SUP.1%20Qualitätssicherung.aspx?csf=1&web=1&e=WVEpfG&cid=d592f9f1-c660-4691-9e08-fe958a04a350",
+      "phantom-url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/013_SUP.1%20Qualit%C3%A4tssicherung.aspx?csf=1&web=1&e=WVEpfG&cid=d592f9f1-c660-4691-9e08-fe958a04a350",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 205,
+      "label": "problem/änderungsmanagement",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/017_SUP.10%20Problem_Änderungsmanagement.aspx?csf=1&web=1&e=msWJZ9&cid=a3e412f8-dc4e-4d9c-904a-3066b88fc2b5",
+      "phantom-url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/017_SUP.10%20Problem_%C3%84nderungsmanagement.aspx?csf=1&web=1&e=msWJZ9&cid=a3e412f8-dc4e-4d9c-904a-3066b88fc2b5",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 206,
+      "label": "lieferantenmanagement",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/019_ACQ.4%20Lieferantenmanagement.aspx?csf=1&web=1&e=EUkfuE&cid=812ab45d-dd09-4a38-bb3c-a0fb55bb8ff6",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 207,
+      "label": "fusi-konzeptphase",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/021_FSE.1%20FuSi-Konzeptphase.aspx?csf=1&web=1&e=NHPa1f&cid=39b7ec30-7ef3-4df1-a731-f992a71b5329",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 208,
+      "label": "anforderungserhebung",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/031_SYS.1%20Anforderungserhebung.aspx?csf=1&web=1&e=uHAHlg&cid=b1e73ba8-dab9-45cc-b675-a97dcf064f5c",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 209,
+      "label": "systemanforderungsanalyse",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/032_SYS.2%20Systemanforderungsanalyse.aspx?csf=1&web=1&e=jDKngj&cid=98a61932-e390-425f-8f86-621c17d69501",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 210,
+      "label": "systemarchitekturdesign",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/033_SYS.3%20Systemarchitekturdesign.aspx?csf=1&web=1&e=LOpgog&cid=2a46bac4-02d9-492a-9814-254c1c7b70cb",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 211,
+      "label": "systemintegration",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/034_SYS.4%20Systemintegration%20und%20Systemintegrationstest.aspx?csf=1&web=1&e=uVNqr5&cid=3e7056e0-0b1b-4de3-b346-63c453f931dc",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 212,
+      "label": "systemqualifizierung",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/035_SYS.5%20Systemqualifizierung.aspx?csf=1&web=1&e=0RQxam&cid=7de8a2aa-d13d-4e01-b84e-f3dbbef9523e",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 213,
+      "label": "softwareanforderungsanalyse",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/041_SWE.1%20Softwareanforderungsanalyse.aspx?csf=1&web=1&e=NIDObu&cid=7a5326ed-1420-48a4-b9e4-396cd64d9898",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 214,
+      "label": "softwarearchitekturdesign",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/042_SWE.2%20Softwarearchitekturdesign.aspx?csf=1&web=1&e=erOUDq&cid=35a390f9-a47c-460c-9c91-35b85577db03",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 215,
+      "label": "detailliertes_softwaredesign",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/043_SWE.3%20Detailliertes%20Softwaredesign%20und%20Softwaremodulerstellung.aspx?csf=1&web=1&e=48UWva&cid=4245bee2-8e77-4f13-a028-21019350f83e",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 216,
+      "label": "softwaremodulverifikation",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/044_SWE.4%20Softwaremodulverifikation.aspx?csf=1&web=1&e=BFfHQb&cid=9735d8ab-353f-4ef2-9eef-aff6d94f47aa",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 217,
+      "label": "softwareintegration",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/045_SWE.5%20Softwareintegration%20und%20Softwareintegrationstest.aspx?csf=1&web=1&e=9cTBrH&cid=90c7d785-ade4-45be-8804-91bb2231e9dc",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 218,
+      "label": "softwarequalifizierung",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/046_SWE.6%20Softwarequalifizierung.aspx?csf=1&web=1&e=LIGLpg&cid=5b4a8a77-ebb6-4141-8bba-c90b322dc162",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 219,
+      "label": "hardwareanforderungsanalyse",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/051_HWE.1%20Hardwareanforderungsanalyse.aspx?csf=1&web=1&e=lM9L9n&cid=22309796-a290-48ea-8419-d73e994fbc03",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 220,
+      "label": "hardwaredesign",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/052_HWE.2%20Hardwaredesign.aspx?csf=1&web=1&e=X3Rg6r&cid=782c1393-c0eb-44e7-939b-98722eef8b0f",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 221,
+      "label": "hardwaredesignverifikation",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/053_HWE.3%20Hardwaredesignverifikation.aspx?csf=1&web=1&e=qhaDgB&cid=a4db3e4f-f48a-485c-a17a-704bafd2d628",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 222,
+      "label": "hardwareanforderungsverifikation",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/054_HWE.4%20Hardwareanforderungsverifikation.aspx?csf=1&web=1&e=SHA9eD&cid=52233718-48f7-4b1e-8a0e-073e04acfa27",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 223,
+      "label": "produktion",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/071_PRD.1%20Produktion.aspx?csf=1&web=1&e=8KBbYP&cid=2f838128-9aa5-40e8-9bca-0da90242a753",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 224,
+      "label": "prozessverbesserung",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/081_PIM.3%20Prozessverbesserung.aspx?csf=1&web=1&e=TKkpoE&cid=52aa9c5f-74c2-4677-afc9-64010fd297a3",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 225,
+      "label": "zulassungen",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/SitePages/082_APR%20Zulassungen.aspx",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 301,
+      "label": "fs_projektleiter",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=6&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 302,
+      "label": "fs_testmanager",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=11&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 303,
+      "label": "fs_fusi-manager",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=8&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 304,
+      "label": "fs_konfigurationsmanager",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=9&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 305,
+      "label": "fs_qualitätsmanager",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=10&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 306,
+      "label": "fs_problem-/änderungsmanager",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=13&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 307,
+      "label": "fs_fusi-ingenieur",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=15&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 308,
+      "label": "fs_systemanforderungsingenieur",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=17&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 309,
+      "label": "fs_systemarchitekt",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=18&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 310,
+      "label": "fs_systemintegrator",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=19&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 311,
+      "label": "fs_systemqualifizierer",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=20&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 312,
+      "label": "fs_softwareanforderungsingenieur",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=21&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 313,
+      "label": "fs_softwarearchitekt",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=22&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 314,
+      "label": "fs_softwareentwickler",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=23&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 315,
+      "label": "fs_softwaretester",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=36&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 316,
+      "label": "fs_softwareintegrator",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=24&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 317,
+      "label": "fs_softwarequalifizierer",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=25&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 318,
+      "label": "fs_hardwareanforderungsingenieur",
+      "layer": 1234,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=26&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+
+
+    {
+      "id": 319,
+      "label": "fs_hardwareentwickler",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=27&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 320,
+      "label": "fs_hardwareintegrator",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=28&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 321,
+      "label": "fs_hardwarequalifierer",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=29&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 351,
+      "label": "fs_autor",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=31&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 352,
+      "label": "fs_reviewer",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=32&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 353,
+      "label": "fs_moderator",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=34&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 354,
+      "label": "fs_protokollant",
+      "layer": 1,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/Lists/Prozessrollen%20neu/DispForm.aspx?ID=39&Source=https%3A%2F%2Fmybender%2Esharepoint%2Ecom%2Fsites%2FBKGRD%2DFSPA%2FBereichsveroeffentlichung%2FSitePages%2FProzessrollen%2Easpx%3Fcsf%3D1%26web%3D1%26e%3DmcAB0z&ContentTypeId=0x0100A0C7A960A92A6043BBBD68A939D3CCC10091C7678A277AB448B45E56F21B2C7015&RootFolder=",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 9999,
+      "label": "test",
+      "layer": 0,
+      "url": "https://mybender.sharepoint.com/sites/BKGRD-FSPA/Bereichsveroeffentlichung/_layouts/15/embed.aspx?UniqueId=51819cd5-2826-414e-a06d-a758bce7620f&client_id=FileViewerWebPart&showNewWindow=true&embed=%7B%22af%22%3Afalse%2C%22p%22%3A1%2C%22z%22%3A%22width%22%7D&auth=readwrite",
+      "children": [
+
+      ]
+    },
+    {
+      "id": 1234,
+      "label": "",
+      "layer": 1234,
+      "url": "",
+      "children": [
+
+      ]
+    }
+  ]
+}

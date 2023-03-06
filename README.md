@@ -20,7 +20,7 @@ SharePoint to PDF Converter
 ## Usage
 1. Run [Main.py](Main.py) and log in using your credentials.
 <br>__Note:__ When prompted, save your credentials to stay logged in
-2. Optionally edit [config.json](config.json) to add/remove pages and order them.
+2. Optionally edit [config.json](layout.json) to add/remove pages and order them.
 3. Start the conversion by running [Main.py](Main.py). The output files can be found in `\output`.
 <br>__Note:__ This may take a while. You can minimize the Chrome window but do not close it. The program is done as soon as the window closes by itself.
 

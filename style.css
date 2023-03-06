@@ -1,26 +1,63 @@
 body {
     font-family: "Tahoma";
     font-size: 10pt;
-    background: #fff;
 }
 
-table, tr, th, td {
-    border: 1px solid green;
+
+
+table {
     border-collapse: collapse;
-    vertical-align: top;
-    background: #fff;
+    background: #fdfdfd;
+    border:none;
+}
+
+td, th {
+    border:none;
+    border-left:1px solid #aaa;
+    padding: .6rem;
 }
 
 th {
-    border-bottom: 2px solid green;
+    background: #deffcc;
+    border-left:1px solid #00910f;
+    border-bottom: 3px solid #00910f;
+}
+
+td:first-child, th:first-child {
+    border-left:none;
+}
+
+tr:nth-child(even){
+    background: #f8f8f8;
+}
+
+table, tr, td, th, tbody, thead, tfoot, .avoidInsidePageBreak{page-break-inside: avoid !important;}
+h1, h2, h3, h4, h5, h6 { page-break-after: avoid !important }
+h1, .pageBreak { page-break-before: always }
+
+td a {
+    display: inline-block;
+    height:2.2rem;
+
+}
+
+a:link {
+      color: #00910f;
+      font-style: italic;
+      text-decoration: none;
+}
+
+
+.ms-Image-image {
+    width:3vw;
+    border-radius:50%;
+}
+
+button {
+    border-radius: 10rem;
+    border: none;
     background: #eee;
-}
-
-th, td {
-    padding: 5px;
-}
-
-label {
-    font-size: 11pt;
-    font-weight: bold;
+    font-size:10pt;
+    margin:1px;
+    padding: 0.5rem 1rem;
 }
