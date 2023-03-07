@@ -1,0 +1,6 @@
+PyAutoGUI~=0.9.53
+bs4~=0.0.1
+beautifulsoup4~=4.11.2
+selenium~=3.141.0
+pdfkit~=1.0.0
+setuptools~=60.2.0

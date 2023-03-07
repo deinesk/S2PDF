@@ -1,7 +1,6 @@
 # =========================
 # Author: Kai Leon Deines
 # =========================
-
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import os
@@ -10,11 +9,12 @@ from time import sleep
 import random
 import string
 import pyautogui
-
 from selenium.webdriver.common.keys import Keys
-
-import pdftest
-
+import pdfkit
+import rotatescreen
+import shutil
+screen = rotatescreen.get_primary_display()
+desktop = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
 
 def get_page(page_id):
     for page in layout["pages"]:
@@ -27,18 +27,20 @@ def append_page(page_id, ignore_children):
     # validating page
     page = get_page(page_id)
     if page is None:
-        print("WARNUNG: Page " + str(page_id) + " konnte nicht gefunden werden")
+        print("WARNING: Page " + str(page_id) + " could not be found")
         return
     url = page["url"]
     if url == "":
-        print("WARNUNG: Die URL von Page " + str(page_id) + " konnte nicht gefunden werden")
+        print("WARNING: URL of page " + str(page_id) + " could not be found")
         if not ignore_children:
             append_children(page)
         return
 
+
     # loading page
-    print("Loading Page " + str(page_id) + " (" + page["label"] + "): " + url)
-    html_source = load_page(url)
+    print("LOADING PAGE " + str(page_id) + " '" + page["label"] + "': " + url)
+    driver.get(url)
+    html_source = get_page_content()
 
     # creating soup
     # also inserting page break at the beginning of each page
@@ -58,13 +60,14 @@ def append_page(page_id, ignore_children):
     avoid_inside_page_breaks(soup)
     fix_table_headers(soup)
     process_lists(soup)
-    process_embeds(soup)
     process_images(soup)
+    process_embeds(soup)
+
 
     # process_embeds_as_pdf(soup) # won't be rendered by pdfkit
 
     # append the html to output
-    with open("out/output.html", "a", encoding="utf-8") as file:
+    with open(desktop + "/S2PDF/output.html", "a", encoding="utf-8") as file:
         file.write(str(soup))
 
     # do the same for each child
@@ -78,7 +81,7 @@ def read_pages(page_ids, ignore_children):
 
 
 def update_references():
-    with open("out/output.html", "r", encoding="utf-8") as file:
+    with open(desktop + "/S2PDF/output.html", "r", encoding="utf-8") as file:
         soup = BeautifulSoup(file, "html.parser", from_encoding="utf-8")
 
     update_a_tags(soup)
@@ -87,7 +90,7 @@ def update_references():
     # removing the very first page break as it would otherwise cause an empty page at the beginning of the document
     soup.select('div[class="pageBreak"]')[0]["class"] = ""
 
-    with open("out/output.html", "w", encoding="utf-8") as file:
+    with open(desktop + "/S2PDF/output.html", "w", encoding="utf-8") as file:
         file.write(str(soup))
 
 
@@ -195,29 +198,33 @@ def process_images(soup):
     for image in images:
         src = image["src"]
         if src == "":
-            image.decompose()
             return
+        type = src[len(src)-3:len(src)]
         try:
-            driver.get(src)
+            img_id = source_map[src]
         except:
             try:
-                driver.get("https://mybender.sharepoint.com" + src)
-            except:
-                print("WARNUNG: Ungültiger Link '" + src + "'")
-
-        img_id = ''.join(random.choice(letters) for _ in range(10))
-        with open("out/media/" + img_id + ".png", "wb") as png:
-            try:
-                png.write(driver.find_element_by_tag_name("img").screenshot_as_png)
+                driver.get(src)
             except:
                 try:
-                    png.write(driver.find_element_by_tag_name("svg").screenshot_as_png)
-                    image["width"] = "20px"
+                    driver.get("https://mybender.sharepoint.com" + src)
                 except:
-                    print("WARNUNG: Die Datei '" + src + "' konnte nicht gefunden werden.")
+                    print("WARNUNG: Ungültiger Link '" + src + "'")
+
+            img_id = ''.join(random.choice(letters) for _ in range(10))
+            source_map[src] = img_id
+            with open(desktop + "/S2PDF/media/" + img_id + ".png", "wb") as png:
+                try:
+                    png.write(driver.find_element_by_tag_name("img").screenshot_as_png)
+                except:
+                    try:
+                        png.write(driver.find_element_by_tag_name("svg").screenshot_as_png)
+                    except:
+                        print("WARNUNG: Die Datei '" + src + "' konnte nicht gefunden werden.")
         image["src"] = "media/" + img_id + ".png"
-        if image.parent.name == "i":
-            image.parent.replace_with(image)
+        if type == "svg":
+            image["width"] = "20px"
+
 
 
 def process_embeds(soup):
@@ -228,9 +235,9 @@ def process_embeds(soup):
         letters = string.ascii_lowercase
         for iframe in iframes:
             driver.get(iframe["src"])
-            sleep(patience)
+            sleep(1)
             img_id = ''.join(random.choice(letters) for _ in range(10))
-            with open("out/media/" + img_id + ".png", "wb") as png:
+            with open(desktop + "/S2PDF/media/" + img_id + ".png", "wb") as png:
                 png.write(driver.find_element_by_class_name("canvasWrapper").screenshot_as_png)
                 embed.replace_with(soup.new_tag('img src="media/' + img_id + '.png"'))
 
@@ -315,16 +322,12 @@ def set_up_driver():
     options = webdriver.ChromeOptions()
     options.add_argument(
         "user-data-dir=C:\\Users\\" + os.getenv('username') + "\\AppData\\Local\\Google\\Chrome\\UserDataS2PDF")
-    options.add_experimental_option("prefs",
-                                    {"plugins.plugins_list": [{"enabled": False, "name": "Chrome PDF Viewer"}],
-                                     # Disable Chrome's PDF Viewer
-                                     "download.default_directory": os.path.dirname(
-                                         os.path.abspath(__file__)) + "\\out/media\\",
-                                     "download.extensions_to_open": "applications/pdf"})
+    #options.add_argument("window-position=420,-420")
+    # options.add_experimental_option("prefs",{"plugins.plugins_list": [{"enabled": False, "name": "Chrome PDF Viewer"}],"download.default_directory": os.path.dirname(os.path.abspath(__file__)) + "\\out/media\\","download.extensions_to_open": "applications/pdf"})
     d = webdriver.Chrome(executable_path=path, options=options)
     d.maximize_window()
-    d.set_window_size(1080, 1920)
-    d.set_window_position(420, -420)
+    # d.set_window_size(1080, 1920)
+    # d.set_window_position(420,-420)
     return d
 
 
@@ -362,10 +365,18 @@ def add_reference(soup, page):
             pass
 
 
-def load_page(url):
-    driver.get(url)
+def get_page_content():
+
+    while (len(driver.find_elements_by_class_name("login-paginated-page")) != 0) | \
+            (len(driver.find_elements_by_css_selector('input[name="login"]')) != 0) | \
+            (len(driver.find_elements_by_class_name("sign-in-box ext-sign-in-box fade-in-lightbox")) != 0) | \
+            (len(driver.find_elements_by_id("lightbox")) != 0):
+        print("Waiting for login")
+        screen.rotate_to(0)
+        sleep(10)
+    screen.rotate_to(90)
     scroll_down()
-    sleep(patience)
+
     try:
         html_source = driver.find_element_by_class_name("Files-content").get_attribute("innerHTML")
     except:
@@ -373,31 +384,39 @@ def load_page(url):
             html_source = driver.find_element_by_class_name("mainContent").get_attribute("innerHTML")
         except:
             html_source = driver.find_element_by_class_name("ReactClientForm").get_attribute("innerHTML")
+
+    while "Vorschau wird geladen" in html_source:
+        print("WARNING: Page not fully loaded. Sleeping one second...")
+        sleep(1)
+        html_source = get_page_content()
+
     return html_source
 
 
 def scroll_down():
-    pyautogui.moveTo(960, 540)
+    pyautogui.moveTo(540, 960)
     try:
         body = driver.find_element_by_css_selector('div[data-automation-id="contentScrollRegion"]')
         for i in range(0, 100):
             body.send_keys(Keys.ARROW_DOWN)
+            sleep(0.001)
     except:
         pass
 
 
 def init():
     # making sure necessary directories exist
-    if not os.path.exists('out'):
-        os.makedirs('out')
-
-    if not os.path.exists('out/media'):
-        os.makedirs('out/media')
+    if not os.path.exists(desktop + '/S2PDF/media'):
+        os.makedirs(desktop + '/S2PDF/media')
 
     # creating new output file
-    with open("out/output.html", "w", encoding="utf-8") as output:
-        output.write("<meta charset='utf-8'><link rel=\"stylesheet\" href=\"../style.css\">")
+    with open(desktop + "/S2PDF/output.html", "w", encoding="utf-8") as output:
+        output.write("<meta charset='utf-8'><link rel=\"stylesheet\" href=\"style.css\">")
     output.close()
+
+    # copying stylesheet
+    shutil.copyfile("style.css", desktop + "/S2PDF/style.css")
+
 
 
 init()
@@ -406,15 +425,14 @@ with open("layout.json", "r", encoding="utf-8") as f:
     # returns json object as a dictionary
     layout = json.load(f)
     f.close()
-with open("config.json", "r", encoding="utf-8") as c:
-    config = json.load(c)
-    c.close()
-# 'patience' is the loading time for each page in seconds
-patience = float(config["patience"])
+
 driver = set_up_driver()
+source_map = {}
+source_map.setdefault("#")
 reference_map = {}
 reference_map.setdefault("#")
 read_pages([0], False)
 update_references()
 driver.quit()
-pdftest.convert_to_pdf()
+screen.rotate_to(0)
+pdf = pdfkit.from_file([desktop + "/S2PDF/output.html"], desktop + "/S2PDF/output.pdf")

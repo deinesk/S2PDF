@@ -31,7 +31,12 @@ tr:nth-child(even){
     background: #f8f8f8;
 }
 
-table, tr, td, th, tbody, thead, tfoot, .avoidInsidePageBreak{page-break-inside: avoid !important;}
+img {
+    mix-blend-mode: multiply;
+}
+
+/* if any problems occur add table and tbody again */
+tr, td, th, thead, tfoot, .avoidInsidePageBreak{page-break-inside: avoid !important;}
 h1, h2, h3, h4, h5, h6 { page-break-after: avoid !important }
 h1, .pageBreak { page-break-before: always }
 
