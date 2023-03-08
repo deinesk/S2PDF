@@ -18,9 +18,14 @@ td, th {
 }
 
 th {
-    background: #deffcc;
-    border-left:1px solid #00910f;
-    border-bottom: 3px solid #00910f;
+    background: #ffd663;
+    color: #383838;
+    border-left:1px solid #ffbb00;
+    border-bottom: 3px solid #ffbb00;
+}
+
+td{
+    border-top: 1px solid #f1f1f1;
 }
 
 td:first-child, th:first-child {
@@ -36,7 +41,37 @@ img {
 }
 
 /* if any problems occur add table and tbody again */
-tr, td, th, thead, tfoot, .avoidInsidePageBreak{page-break-inside: avoid !important;}
+tr, td, th, thead, tfoot, .avoidInsidePageBreak, div[data-automation-id="CanvasControl"], div[data-automation-id="CanvasSection"], div[data-automation-id="CanvasZone"] {
+    page-break-inside: avoid !important;
+}
+
+h1, .main-headline {
+    text-align: center;
+    background: #484848;
+    color: #ffc72b;
+    padding: 20px 0 20px 0;
+}
+
+h1 {
+    font-size: 34px;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 26px;
+}
+
+h4 {
+    font-size: 22px;
+}
+
+h5 {
+    font-size: 18px;
+}
+
 h1, h2, h3, h4, h5, h6 { page-break-after: avoid !important }
 h1, .pageBreak { page-break-before: always }
 
@@ -47,7 +82,7 @@ td a {
 }
 
 a:link {
-      color: #00910f;
+      color: #d69d00;
       font-style: italic;
       text-decoration: none;
 }

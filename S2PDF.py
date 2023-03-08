@@ -13,8 +13,13 @@ from selenium.webdriver.common.keys import Keys
 import pdfkit
 import rotatescreen
 import shutil
+import pyautogui
+
 screen = rotatescreen.get_primary_display()
 desktop = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
+os.environ["PATH"] = "C:\\Program Files (x86)\\chromedriver.exe;C:\\Program Files\\wkhtmltopdf\\bin"
+print("INFO: Environment variables have been set: " + os.environ.get("PATH"))
+
 
 def get_page(page_id):
     for page in layout["pages"]:
@@ -36,10 +41,10 @@ def append_page(page_id, ignore_children):
             append_children(page)
         return
 
-
     # loading page
-    print("LOADING PAGE " + str(page_id) + " '" + page["label"] + "': " + url)
+    print("LOADING: Page " + str(page_id) + " '" + page["label"] + "': " + url)
     driver.get(url)
+    sleep(patience)
     html_source = get_page_content()
 
     # creating soup
@@ -55,14 +60,16 @@ def append_page(page_id, ignore_children):
     decompose_empty_icons(soup)
     decompose_third_parent(soup, {'div[class="ReactFieldEditor-placeHolder"]'})
     decompose_empty_buttons(soup)
-    fix_headlines(soup)
+    fix_headlines(soup, page_id)
     shift_headlines(soup, page)
-    avoid_inside_page_breaks(soup)
     fix_table_headers(soup)
+    # avoid_inside_page_breaks(soup)
     process_lists(soup)
+    if filter_versions:
+        filter_by_version(soup)
+    filter_by_version(soup)
     process_images(soup)
     process_embeds(soup)
-
 
     # process_embeds_as_pdf(soup) # won't be rendered by pdfkit
 
@@ -73,6 +80,24 @@ def append_page(page_id, ignore_children):
     # do the same for each child
     if not ignore_children:
         append_children(page)
+
+
+def filter_by_version(soup):
+    tables = soup.select("table")
+    for table in tables:
+        if "Version" not in table.thead.text:
+            return
+        header_cells = table.select("th")
+        version_col_index = 0
+        for header_cell in header_cells:
+            version_col_index = version_col_index + 1
+            if header_cell.text == "Version": break
+
+        rows = table.select("tr")
+        for row in rows:
+            cell = row.select("td")[version_col_index-1]
+            if ".0" not in cell.text:
+                row.decompose()
 
 
 def read_pages(page_ids, ignore_children):
@@ -161,22 +186,30 @@ def decompose_empty_buttons(soup):
             button.decompose()
 
 
-def fix_headlines(soup):
+def fix_headlines(soup, page_id):
     # creates headline tags where they're missing
     items = soup.select('div[data-automation-id="TitleTextId"]')
     for item in items:
         item.name = "h1"
+        # also adding text-align center to this headline
+        item["class"] = "main-headline"
 
     # role pages main headline
     bcbs = soup.select('ul[class="BreadcrumbBar-list"]')
     for bcb in bcbs:
         items = bcb.select("li")
-        bcb.replace_with(BeautifulSoup("<h1>" + items[len(items) - 1].text + "</h1>", "html.parser"))
+        # also adding text-align center to this headline
+        bcb.replace_with(BeautifulSoup("<h1 class=\"main-headline\">" + items[len(items) - 1].text + "</h1>", "html.parser"))
 
     # role pages headlines
     items = soup.select("label")
     for item in items:
-        item.name = "h2"
+        item.name = "h4"
+
+    pages = soup.select('div[id="' + str(page_id) + '"]')
+    for page in pages:
+        soup.find("h1")["id"] = page_id
+        page["id"] = ""
 
 
 def shift_headlines(soup, page):
@@ -199,7 +232,7 @@ def process_images(soup):
         src = image["src"]
         if src == "":
             return
-        type = src[len(src)-3:len(src)]
+        type = src[len(src) - 3:len(src)]
         try:
             img_id = source_map[src]
         except:
@@ -209,7 +242,7 @@ def process_images(soup):
                 try:
                     driver.get("https://mybender.sharepoint.com" + src)
                 except:
-                    print("WARNUNG: Ungültiger Link '" + src + "'")
+                    print("WARNING: Invalid URL '" + src + "'")
 
             img_id = ''.join(random.choice(letters) for _ in range(10))
             source_map[src] = img_id
@@ -220,11 +253,10 @@ def process_images(soup):
                     try:
                         png.write(driver.find_element_by_tag_name("svg").screenshot_as_png)
                     except:
-                        print("WARNUNG: Die Datei '" + src + "' konnte nicht gefunden werden.")
+                        print("WARNING: The file '" + src + "' could not be found.")
         image["src"] = "media/" + img_id + ".png"
         if type == "svg":
             image["width"] = "20px"
-
 
 
 def process_embeds(soup):
@@ -290,13 +322,16 @@ def process_lists(soup):
 
 def avoid_inside_page_breaks(soup):
     # avoiding page breaks between related elements
-    canvas_zones = soup.select('div[data-automation-id="CanvasZone"]')
-    for canvas_zone in canvas_zones:
-        canvas_zone["class"] = "avoidInsidePageBreak"
-
     canvas_controls = soup.select('div[data-automation-id="CanvasContol"]')
     for canvas_control in canvas_controls:
         canvas_control["class"] = "avoidInsidePageBreak"
+    canvas_sections = soup.select('div[data-automation-id="CanvasSection"]')
+    for canvas_section in canvas_sections:
+        canvas_section["class"] = "avoidInsidePageBreak"
+
+    canvas_zones = soup.select('div[data-automation-id="CanvasZone"]')
+    for canvas_zone in canvas_zones:
+        canvas_zone["class"] = "avoidInsidePageBreak"
 
 
 def fix_table_headers(soup):
@@ -309,6 +344,7 @@ def fix_table_headers(soup):
         thead = soup.new_tag("thead")
         thead.insert(0, tr)
         table.insert(0, thead)
+        table.parent.parent.parent["class"] = "avoidInsidePageBreak"
 
 
 def append_children(page):
@@ -322,7 +358,7 @@ def set_up_driver():
     options = webdriver.ChromeOptions()
     options.add_argument(
         "user-data-dir=C:\\Users\\" + os.getenv('username') + "\\AppData\\Local\\Google\\Chrome\\UserDataS2PDF")
-    #options.add_argument("window-position=420,-420")
+    # options.add_argument("window-position=420,-420")
     # options.add_experimental_option("prefs",{"plugins.plugins_list": [{"enabled": False, "name": "Chrome PDF Viewer"}],"download.default_directory": os.path.dirname(os.path.abspath(__file__)) + "\\out/media\\","download.extensions_to_open": "applications/pdf"})
     d = webdriver.Chrome(executable_path=path, options=options)
     d.maximize_window()
@@ -366,7 +402,6 @@ def add_reference(soup, page):
 
 
 def get_page_content():
-
     while (len(driver.find_elements_by_class_name("login-paginated-page")) != 0) | \
             (len(driver.find_elements_by_css_selector('input[name="login"]')) != 0) | \
             (len(driver.find_elements_by_class_name("sign-in-box ext-sign-in-box fade-in-lightbox")) != 0) | \
@@ -376,7 +411,9 @@ def get_page_content():
         sleep(10)
     screen.rotate_to(90)
     scroll_down()
-
+    while "Vorschau wird geladen" in driver.page_source:
+        print("INFO: Page not fully loaded. Sleeping one second...")
+        sleep(1)
     try:
         html_source = driver.find_element_by_class_name("Files-content").get_attribute("innerHTML")
     except:
@@ -384,11 +421,6 @@ def get_page_content():
             html_source = driver.find_element_by_class_name("mainContent").get_attribute("innerHTML")
         except:
             html_source = driver.find_element_by_class_name("ReactClientForm").get_attribute("innerHTML")
-
-    while "Vorschau wird geladen" in html_source:
-        print("WARNING: Page not fully loaded. Sleeping one second...")
-        sleep(1)
-        html_source = get_page_content()
 
     return html_source
 
@@ -418,21 +450,29 @@ def init():
     shutil.copyfile("style.css", desktop + "/S2PDF/style.css")
 
 
-
-init()
-# read json files
-with open("layout.json", "r", encoding="utf-8") as f:
-    # returns json object as a dictionary
-    layout = json.load(f)
-    f.close()
-
-driver = set_up_driver()
-source_map = {}
-source_map.setdefault("#")
-reference_map = {}
-reference_map.setdefault("#")
-read_pages([0], False)
-update_references()
-driver.quit()
-screen.rotate_to(0)
-pdf = pdfkit.from_file([desktop + "/S2PDF/output.html"], desktop + "/S2PDF/output.pdf")
+try:
+    # read json files
+    with open("layout.json", "r", encoding="utf-8") as f:
+        # returns json object as a dictionary
+        layout = json.load(f)
+        f.close()
+    with open("config.json", "r", encoding="utf-8") as f:
+        config = json.load(f)
+        f.close()
+    patience = float(config["patience"])
+    filter_versions = bool(config["filter_versions"])
+    init()
+    driver = set_up_driver()
+    source_map = {}
+    source_map.setdefault("#")
+    reference_map = {}
+    reference_map.setdefault("#")
+    read_pages([0], False)
+    update_references()
+    driver.quit()
+    screen.rotate_to(0)
+    pdf = pdfkit.from_file([desktop + "/S2PDF/output.html"], desktop + "/S2PDF/output.pdf")
+    pyautogui.alert(title="Done", text="The Sharepoint has been converted to PDF successfully!")
+except Exception as ex:
+    screen.rotate_to(0)
+    pyautogui.alert(title="Error: Conversion Failed", text=str(ex))
