@@ -450,6 +450,7 @@ def init():
     shutil.copyfile("style.css", desktop + "/S2PDF/style.css")
 
 
+#
 try:
     # read json files
     with open("layout.json", "r", encoding="utf-8") as f:
