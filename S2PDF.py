@@ -1,479 +1,235 @@
 # =========================
 # Author: Kai Leon Deines
 # =========================
-from bs4 import BeautifulSoup
-from selenium import webdriver
-import os
 import json
-from time import sleep
-import random
-import string
-import pyautogui
-from selenium.webdriver.common.keys import Keys
+import tkinter as tk
+import os
 import pdfkit
-import rotatescreen
-import shutil
 import pyautogui
+import shutil
+import rotatescreen
+from bs4 import BeautifulSoup
+from HTMLFactory import HTMLFactory
 
-screen = rotatescreen.get_primary_display()
+# save desktop path
 desktop = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
-os.environ["PATH"] = "C:\\Program Files (x86)\\chromedriver.exe;C:\\Program Files\\wkhtmltopdf\\bin"
-print("INFO: Environment variables have been set: " + os.environ.get("PATH"))
 
+# save appdata path
+appdata = os.getenv("LOCALAPPDATA")
 
-def get_page(page_id):
-    for page in layout["pages"]:
-        if page["id"] == page_id:
-            return page
-    return None
+# get screen information
+screen = rotatescreen.get_primary_display()
+default_orientation = screen.current_orientation
 
+class GUI:
 
-def append_page(page_id, ignore_children):
-    # validating page
-    page = get_page(page_id)
-    if page is None:
-        print("WARNING: Page " + str(page_id) + " could not be found")
-        return
-    url = page["url"]
-    if url == "":
-        print("WARNING: URL of page " + str(page_id) + " could not be found")
-        if not ignore_children:
-            append_children(page)
-        return
+    # S2PDF.create_dirs_and_files()
+    def __init__(self):
+        create_missing_dirs_and_files()
+        self.root = tk.Tk()
+        self.root.iconbitmap("icon.ico")
+        self.root.geometry("400x200")
+        self.root.title("S2PDF")
+        self.bgcolor = "#222"
+        self.img = tk.PhotoImage(file="button.png")
+        self.root["bg"] = self.bgcolor
 
-    # loading page
-    print("LOADING: Page " + str(page_id) + " '" + page["label"] + "': " + url)
-    driver.get(url)
-    sleep(patience)
-    html_source = get_page_content()
+        # button frame
+        self.buttonframe = tk.Frame(self.root)
+        self.buttonframe.columnconfigure(0, weight=1)
+        self.buttonframe.columnconfigure(1, weight=1)
 
-    # creating soup
-    # also inserting page break at the beginning of each page
-    soup = BeautifulSoup("<div class=\"pageBreak\" id=" + str(page_id) + ">" + html_source + "</div>", "html.parser")
+        self.btn1 = tk.Button(self.buttonframe, text="Edit Layout...", font=("Tahoma", 16), command=self.open_layout)
+        self.btn1.grid(row=0, column=0, sticky=tk.W + tk.E)
+        self.btn2 = tk.Button(self.buttonframe, text="Edit Config...", font=("Tahoma", 16), command=self.open_config)
+        self.btn2.grid(row=0, column=1, sticky=tk.W + tk.E)
 
-    # manipulating soup
-    add_reference(soup, page)
-    decompose(soup,
-              {'div[id="spCommandBar"]', 'span[class*="accessibleLabel"]', 'figcaption', 'div[id="CommentsWrapper"]',
-               'div[class="ReactFieldEditor-MoreToggle"]',
-               })
-    decompose_empty_icons(soup)
-    decompose_third_parent(soup, {'div[class="ReactFieldEditor-placeHolder"]'})
-    decompose_empty_buttons(soup)
-    fix_headlines(soup, page_id)
-    shift_headlines(soup, page)
-    fix_table_headers(soup)
-    # avoid_inside_page_breaks(soup)
-    process_lists(soup)
-    if filter_versions:
-        filter_by_version(soup)
-    filter_by_version(soup)
-    process_images(soup)
-    process_embeds(soup)
+        self.format_button(self.btn1)
+        self.format_button(self.btn2)
 
-    # process_embeds_as_pdf(soup) # won't be rendered by pdfkit
+        self.buttonframe.pack(fill="x")
 
-    # append the html to output
-    with open(desktop + "/S2PDF/output.html", "a", encoding="utf-8") as file:
-        file.write(str(soup))
+        # buttons
+        self.btn3 = tk.Button(self.root, text="Download Data", command=self.create_html)
+        self.btn6 = tk.Button(self.root, text="Reset Tables", command=self.reset_tables)
+        self.btn4 = tk.Button(self.root, text="Edit Tables...", command=self.open_tables)
+        self.btn5 = tk.Button(self.root, text="Convert to PDF", command=self.convert)
 
-    # do the same for each child
-    if not ignore_children:
-        append_children(page)
+        for btn in {self.btn3,self.btn4,self.btn5,self.btn6}:
+            self.format_button(btn)
 
+        self.btn3.pack(padx=10)
+        self.btn6.pack(padx=10)
+        self.btn4.pack(padx=10)
+        self.btn5.pack(padx=10)
 
-def filter_by_version(soup):
-    tables = soup.select("table")
-    for table in tables:
-        if "Version" not in table.thead.text:
+        self.root.mainloop()
+
+    def format_button(self, button):
+        # background
+        button["image"] = self.img
+        button["bg"] = self.bgcolor
+        button["activebackground"] = self.bgcolor
+        # text
+        button["fg"] = "#cff"
+        button["activeforeground"] = "#fff"
+        button["border"] = "0"
+        button["font"] = ("Tahoma, 12")
+        button["compound"] = "center"
+
+    def open_layout(self):
+        os.startfile(appdata + "/S2PDF/layout.json")
+
+    def open_config(self):
+        os.startfile(appdata + "/S2PDF/config.json")
+
+    def open_tables(self):
+        if not os.path.isfile(appdata + "/S2PDF/tables.json"):
+            generate_tables_json()
+        try:
+            os.startfile(appdata + "/S2PDF/tables.json")
+        except:
             return
-        header_cells = table.select("th")
-        version_col_index = 0
-        for header_cell in header_cells:
-            version_col_index = version_col_index + 1
-            if header_cell.text == "Version": break
-
-        rows = table.select("tr")
-        for row in rows:
-            cell = row.select("td")[version_col_index-1]
-            if ".0" not in cell.text:
-                row.decompose()
-
-
-def read_pages(page_ids, ignore_children):
-    for page_id in page_ids:
-        append_page(page_id, ignore_children)
-
-
-def update_references():
-    with open(desktop + "/S2PDF/output.html", "r", encoding="utf-8") as file:
-        soup = BeautifulSoup(file, "html.parser", from_encoding="utf-8")
-
-    update_a_tags(soup)
-    update_buttons(soup)
-
-    # removing the very first page break as it would otherwise cause an empty page at the beginning of the document
-    soup.select('div[class="pageBreak"]')[0]["class"] = ""
-
-    with open(desktop + "/S2PDF/output.html", "w", encoding="utf-8") as file:
-        file.write(str(soup))
-
-
-def update_a_tags(soup):
-    # update hrefs in a-tags
-    a_tags = soup.select("a")
-    for a_tag in a_tags:
-        href = a_tag["href"]
+    def create_html(self):
         try:
-            reference_key = str(reference_map.get(href[href.index("/sites"):href.index(".aspx") + 11]))
-            if reference_key != "None":
-                a_tag["href"] = "#" + reference_key
-                a_tag["target"] = "_self"
-            else:
-                a_tag.attrs.pop("href")
-                if a_tag.text == "":
-                    a_tag.decompose()
-        except:
-            a_tag.attrs.pop("href")
-            if a_tag.text == "":
-                a_tag.decompose()
+            HTMLFactory.generate_html(HTMLFactory())
+        except Exception as ex:
+            screen.rotate_to(default_orientation)
+            pyautogui.alert(title="ERROR: Download failed", text=str(ex))
+        generate_tables_json()
+        pyautogui.alert(title="Success!", text="The SharePoint has been downloaded.")
 
-
-def update_buttons(soup):
-    # update buttons
-    buttons = soup.select("button")
-    for button in buttons:
+    def convert(self):
+        apply_table_filters()
         try:
-            reference_key = str(reference_map.get(str(button["title"])))
-        except:
-            try:
-                reference_key = str(reference_map.get(str(button["aria-label"])))
-            except:
-                reference_key = "None"
-        if reference_key != "None":
-            button["href"] = "#" + reference_key
-            button.name = "a"
+            pdf = pdfkit.from_file([desktop + "/S2PDF/filtered.html"], desktop + "/S2PDF/filtered_output.pdf",
+                                   options={"enable-local-file-access": ""})
+            pyautogui.alert(title="Done", text="The Sharepoint has been converted to PDF successfully!")
+        except Exception as ex:
+            pyautogui.alert(title="ERROR: Conversion Failed", text=str(ex))
+
+    def reset_tables(self):
+        generate_tables_json()
+        pyautogui.alert(title="Success!", text="Tables have been reset.")
 
 
-def decompose(soup, tag_names):
-    # removing icons
-    # when added again, they have to be added through list method
-    for tag_name in tag_names:
-        items = soup.select(tag_name)
-        for item in items:
-            item.decompose()
-
-
-def decompose_third_parent(soup, tag_names):
-    for tag_name in tag_names:
-        items = soup.select(tag_name)
-        for item in items:
-            item.parent.parent.parent.decompose()
-
-
-def decompose_empty_icons(soup):
-    icons = soup.select("i")
-    for icon in icons:
-        if not icon.find("img"):
-            icon.decompose()
-
-
-def decompose_empty_buttons(soup):
-    # removing useless buttons
-    buttons = soup.select("button")
-    for button in buttons:
-        if button.text == "":
-            button.decompose()
-
-
-def fix_headlines(soup, page_id):
-    # creates headline tags where they're missing
-    items = soup.select('div[data-automation-id="TitleTextId"]')
-    for item in items:
-        item.name = "h1"
-        # also adding text-align center to this headline
-        item["class"] = "main-headline"
-
-    # role pages main headline
-    bcbs = soup.select('ul[class="BreadcrumbBar-list"]')
-    for bcb in bcbs:
-        items = bcb.select("li")
-        # also adding text-align center to this headline
-        bcb.replace_with(BeautifulSoup("<h1 class=\"main-headline\">" + items[len(items) - 1].text + "</h1>", "html.parser"))
-
-    # role pages headlines
-    items = soup.select("label")
-    for item in items:
-        item.name = "h4"
-
-    pages = soup.select('div[id="' + str(page_id) + '"]')
-    for page in pages:
-        soup.find("h1")["id"] = page_id
-        page["id"] = ""
-
-
-def shift_headlines(soup, page):
-    # shifting headline levels
-    if page["layer"] == 1:
-        for i in range(5, 0, -1):
-            headlines = soup.select("h" + str(i))
-            for headline in headlines:
-                headline.name = "h" + str(i + 1)
-                # adding page break in case it originally was <h1>
-                # if i == 1:
-                #    headline["class"] = "pageBreak"
-
-
-def process_images(soup):
-    # saving and linking images
-    images = soup.select('img')
-    letters = string.ascii_lowercase
-    for image in images:
-        src = image["src"]
-        if src == "":
-            return
-        type = src[len(src) - 3:len(src)]
-        try:
-            img_id = source_map[src]
-        except:
-            try:
-                driver.get(src)
-            except:
-                try:
-                    driver.get("https://mybender.sharepoint.com" + src)
-                except:
-                    print("WARNING: Invalid URL '" + src + "'")
-
-            img_id = ''.join(random.choice(letters) for _ in range(10))
-            source_map[src] = img_id
-            with open(desktop + "/S2PDF/media/" + img_id + ".png", "wb") as png:
-                try:
-                    png.write(driver.find_element_by_tag_name("img").screenshot_as_png)
-                except:
-                    try:
-                        png.write(driver.find_element_by_tag_name("svg").screenshot_as_png)
-                    except:
-                        print("WARNING: The file '" + src + "' could not be found.")
-        image["src"] = "media/" + img_id + ".png"
-        if type == "svg":
-            image["width"] = "20px"
-
-
-def process_embeds(soup):
-    # downloading and embedding pdfs
-    embeds = soup.select('div[data-automation-id="DocumentEmbed"]')
-    for embed in embeds:
-        iframes = embed.select("iframe")
-        letters = string.ascii_lowercase
-        for iframe in iframes:
-            driver.get(iframe["src"])
-            sleep(1)
-            img_id = ''.join(random.choice(letters) for _ in range(10))
-            with open(desktop + "/S2PDF/media/" + img_id + ".png", "wb") as png:
-                png.write(driver.find_element_by_class_name("canvasWrapper").screenshot_as_png)
-                embed.replace_with(soup.new_tag('img src="media/' + img_id + '.png"'))
-
-
-def process_lists(soup):
-    # converting lists
-    list_web_parts = soup.select('div[data-automation-id="ListWebPart"]')
-    for list_web_part in list_web_parts:
-        table_html = BeautifulSoup("<html><body><table></table></body></html>", "html.parser")
-
-        details_list = list_web_part.select('div[data-automation-id="detailsListContainer"]')[0]
-
-        # filling table header
-        details_header = details_list.select('div[data-automationid="DetailsHeader"]')[0]
-        columns_header_columns = details_header.select('div[data-automationid="ColumnsHeaderColumn"]')
-        thead = table_html.new_tag("thead")
-        for columns_header_column in columns_header_columns:
-            th = table_html.new_tag("th")
-            th.string = columns_header_column.text
-            thead.append(th)
-        table_html.html.body.table.append(thead)
-
-        # filling rows
-        list_cells = details_list.select('div[data-automationid="ListCell"]')
-        for list_cell in list_cells:
-            tr = table_html.new_tag("tr")
-
-            table_html.html.body.table.append(tr)
-            rows = table_html.html.body.table.find_all("tr")
-
-            # filling cells
-            details_row_cells = list_cell.select('div[data-automationid="DetailsRowCell"]')
-            for details_row_cell in details_row_cells:
-                td_tag = table_html.new_tag("td")
-
-                cell_html = BeautifulSoup(details_row_cell.encode_contents(encoding='utf-8'), "lxml",
-                                          from_encoding='utf-8')
-
-                buttons = cell_html.find_all("button")
-                button_index = 0
-                for button in buttons:
-                    button.insert_after(cell_html.new_tag("br"))
-                    button_index = button_index + 1
-
-                td_tag.append(cell_html)
-                rows[len(rows) - 1].append(td_tag)
-
-        list_web_part.replace_with(table_html.html.body)
-
-
-def avoid_inside_page_breaks(soup):
-    # avoiding page breaks between related elements
-    canvas_controls = soup.select('div[data-automation-id="CanvasContol"]')
-    for canvas_control in canvas_controls:
-        canvas_control["class"] = "avoidInsidePageBreak"
-    canvas_sections = soup.select('div[data-automation-id="CanvasSection"]')
-    for canvas_section in canvas_sections:
-        canvas_section["class"] = "avoidInsidePageBreak"
-
-    canvas_zones = soup.select('div[data-automation-id="CanvasZone"]')
-    for canvas_zone in canvas_zones:
-        canvas_zone["class"] = "avoidInsidePageBreak"
-
-
-def fix_table_headers(soup):
-    tables = soup.select("table")
-    for table in tables:
-        tr = table.select("tr")[0]
-        table_datas = tr.select("td")
-        for table_data in table_datas:
-            table_data.name = "th"
-        thead = soup.new_tag("thead")
-        thead.insert(0, tr)
-        table.insert(0, thead)
-        table.parent.parent.parent["class"] = "avoidInsidePageBreak"
-
-
-def append_children(page):
-    for child in page["children"]:
-        append_page(child, False)
-
-
-def set_up_driver():
-    # driver setup
-    path = "C:\\Program Files (x86)\\chromedriver.exe"
-    options = webdriver.ChromeOptions()
-    options.add_argument(
-        "user-data-dir=C:\\Users\\" + os.getenv('username') + "\\AppData\\Local\\Google\\Chrome\\UserDataS2PDF")
-    # options.add_argument("window-position=420,-420")
-    # options.add_experimental_option("prefs",{"plugins.plugins_list": [{"enabled": False, "name": "Chrome PDF Viewer"}],"download.default_directory": os.path.dirname(os.path.abspath(__file__)) + "\\out/media\\","download.extensions_to_open": "applications/pdf"})
-    d = webdriver.Chrome(executable_path=path, options=options)
-    d.maximize_window()
-    # d.set_window_size(1080, 1920)
-    # d.set_window_position(420,-420)
-    return d
-
-
-def add_reference(soup, page):
-    # adding id references
-    url = page["url"]
-    phantom_url = None
-    try:
-        phantom_url = page["phantom-url"]
-    except:
-        pass
-    page_id = page["id"]
-
-    try:
-        reference_map[str(url[str(url).index("/sites"):str(url).index(".aspx") + 11])] = page_id
-        if phantom_url is not None:
-            reference_map[
-                str(phantom_url[str(phantom_url).index("/sites"):str(phantom_url).index(".aspx") + 11])] = page_id
-    except:
-        pass
-    spans = soup.select("span")
-    for span in spans:
-        try:
-            reference_map[str(span["title"])] = page_id
-        except:
-            pass
-
-    title_divs = soup.select('div[data-automation-id="TitleTextId"]')
-    for title_div in title_divs:
-        try:
-            title = str(title_div["title"])
-            title = title[0:title.index(" ")]
-            reference_map[title] = page_id
-        except:
-            pass
-
-
-def get_page_content():
-    while (len(driver.find_elements_by_class_name("login-paginated-page")) != 0) | \
-            (len(driver.find_elements_by_css_selector('input[name="login"]')) != 0) | \
-            (len(driver.find_elements_by_class_name("sign-in-box ext-sign-in-box fade-in-lightbox")) != 0) | \
-            (len(driver.find_elements_by_id("lightbox")) != 0):
-        print("Waiting for login")
-        screen.rotate_to(0)
-        sleep(10)
-    screen.rotate_to(90)
-    scroll_down()
-    while "Vorschau wird geladen" in driver.page_source:
-        print("INFO: Page not fully loaded. Sleeping one second...")
-        sleep(1)
-    try:
-        html_source = driver.find_element_by_class_name("Files-content").get_attribute("innerHTML")
-    except:
-        try:
-            html_source = driver.find_element_by_class_name("mainContent").get_attribute("innerHTML")
-        except:
-            html_source = driver.find_element_by_class_name("ReactClientForm").get_attribute("innerHTML")
-
-    return html_source
-
-
-def scroll_down():
-    pyautogui.moveTo(540, 960)
-    try:
-        body = driver.find_element_by_css_selector('div[data-automation-id="contentScrollRegion"]')
-        for i in range(0, 100):
-            body.send_keys(Keys.ARROW_DOWN)
-            sleep(0.001)
-    except:
-        pass
-
-
-def init():
+def create_missing_dirs_and_files():
     # making sure necessary directories exist
     if not os.path.exists(desktop + '/S2PDF/media'):
         os.makedirs(desktop + '/S2PDF/media')
-
-    # creating new output file
-    with open(desktop + "/S2PDF/output.html", "w", encoding="utf-8") as output:
-        output.write("<meta charset='utf-8'><link rel=\"stylesheet\" href=\"style.css\">")
-    output.close()
+    if not os.path.exists(appdata + "/S2PDF"):
+        os.makedirs(appdata + "/S2PDF")
 
     # copying stylesheet
     shutil.copyfile("style.css", desktop + "/S2PDF/style.css")
 
+    # copying layout and config to appdata if not existing
+    if not os.path.isfile(appdata + "/S2PDF/layout.json"):
+        shutil.copyfile("layout.json", appdata + "/S2PDF/" + "layout.json")
+    if not os.path.isfile(appdata + "/S2PDF/config.json"):
+        shutil.copyfile("config.json", appdata + "/S2PDF/" + "config.json")
 
-#
-try:
-    # read json files
-    with open("layout.json", "r", encoding="utf-8") as f:
-        # returns json object as a dictionary
-        layout = json.load(f)
+
+def generate_tables_json():
+    try:
+        with open(desktop + "/S2PDF/output.html", "r", encoding="utf-8") as f:
+            soup = BeautifulSoup(f.read(), "html.parser")
+    except:
+        pyautogui.alert(title="File not found", text="You have to download the SharePoint first.")
+        return
+
+    pages_ = {}
+    pages = soup.find_all("div", recursive=False)
+    for page in pages:
+        page_id = page["id"]
+        tables_ = {}
+        tables = page.select("table")
+        for table in tables:
+            title = get_table_title(table)
+            cols_ = {}
+            cols = table.select("th")
+            for col in cols:
+                cols_[cols.index(col)] = {"Title": col.text, "Visible": "True"}
+            table_ = {"Title": title, "Columns": cols_}
+            tables_[tables.index(table)] = table_
+        try:
+            title = page.find("h1").text
+        except:
+            title = page.find("h2").text
+        pages_[page_id] = {"Title": title, "Tables": tables_}
+
+    with open(os.getenv("LOCALAPPDATA") + "/S2PDF/tables.json", "w", encoding="utf-8") as f:
+        json.dump(pages_, f, ensure_ascii=False, indent=2, sort_keys=False)
+
+
+def get_table_title(soup):
+    parent = soup
+    while parent.get("data-automation-id") != "CanvasControl":
+        parent = parent.parent
+
+    for _ in range(5, 0, -1):
+        h = parent.find("h" + str(_))
+        if h is not None:
+            text = h.text
+            while "\u200b" in text:
+                text = text.replace("\u200b", "")
+            return text
+    while parent.get("data-automation-id") != "CanvasZone":
+        parent = parent.parent
+
+    for _ in range(5, 0, -1):
+        h = parent.find("h" + str(_))
+        if h is not None:
+            if h.text is not None:
+                text = h.text
+                while "\u200b" in text:
+                    text = text.replace("\u200b", "")
+                return text
+    return "Unknown Title"
+
+
+def apply_table_filters():
+    # create tables.json if necessary
+    if not os.path.isfile(appdata + "/S2PDF/tables.json"):
+        generate_tables_json()
+    # load filters from json
+    with open(appdata + "/S2PDF/" + "tables.json") as f:
+        filters = json.load(f)
         f.close()
-    with open("config.json", "r", encoding="utf-8") as f:
-        config = json.load(f)
-        f.close()
-    patience = float(config["patience"])
-    filter_versions = bool(config["filter_versions"])
-    init()
-    driver = set_up_driver()
-    source_map = {}
-    source_map.setdefault("#")
-    reference_map = {}
-    reference_map.setdefault("#")
-    read_pages([0], False)
-    update_references()
-    driver.quit()
-    screen.rotate_to(0)
-    pdf = pdfkit.from_file([desktop + "/S2PDF/output.html"], desktop + "/S2PDF/output.pdf")
-    pyautogui.alert(title="Done", text="The Sharepoint has been converted to PDF successfully!")
-except Exception as ex:
-    screen.rotate_to(0)
-    pyautogui.alert(title="Error: Conversion Failed", text=str(ex))
+
+    # load html
+    with open(desktop + "/S2PDF/output.html", "r", encoding="utf-8") as f:
+        soup = BeautifulSoup(f.read(), "html.parser")
+    f.close()
+
+    pages = soup.find_all("div", recursive=False)
+    for page in pages:
+        page_id = page["id"]
+        tables = page.select("table")
+        for table in tables:
+            table_id = tables.index(table)
+            current_filter = filters[str(page_id)]["Tables"][str(table_id)]["Columns"]
+
+            header_cells = table.select("th")
+            for header_cell in header_cells:
+                header_cell_id = header_cells.index(header_cell)
+                if current_filter[str(header_cell_id)]["Visible"] == "False":
+                    print("Deleting Cell: " + header_cell.text)
+                    header_cell.decompose()
+
+            rows = table.select("tr")
+            for row in rows:
+                cells = row.select("td")
+                for cell in cells:
+                    cell_id = cells.index(cell)
+                    if current_filter[str(cell_id)]["Visible"] == "False":
+                        print("Deleting Cell: " + cell.text)
+                        cell.decompose()
+
+    # write html to new file
+    with open(desktop + "/S2PDF/filtered.html", "w", encoding="utf-8") as f:
+        f.write(str(soup))
+    f.close()
+
+
+GUI()

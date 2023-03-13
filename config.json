@@ -1,4 +1,4 @@
 {
-  "patience": 0.5,
-  "filter_versions": "True"
+  "patience": 0.8,
+  "version-filtering": "True"
 }
