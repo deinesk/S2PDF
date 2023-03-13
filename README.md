@@ -39,3 +39,4 @@ In case the application crashes while you're being authorized, try to save your 
 - There's no title page
 - There's no dedicated table of contents
 - The start page is not formatted correctly
+- wkhtmltopdf causes a ProtocolUnknwonError, which only occurred on other devices. So far I don't know why this is happening or how to reproduce this error. I even tried to run the application on a clean Windows distro (Hyper V) and everything went fine.
