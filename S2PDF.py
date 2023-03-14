@@ -21,6 +21,7 @@ appdata = os.getenv("LOCALAPPDATA")
 screen = rotatescreen.get_primary_display()
 default_orientation = screen.current_orientation
 
+
 class GUI:
 
     # S2PDF.create_dirs_and_files()
@@ -55,7 +56,7 @@ class GUI:
         self.btn4 = tk.Button(self.root, text="Edit Tables...", command=self.open_tables)
         self.btn5 = tk.Button(self.root, text="Convert to PDF", command=self.convert)
 
-        for btn in {self.btn3,self.btn4,self.btn5,self.btn6}:
+        for btn in {self.btn3, self.btn4, self.btn5, self.btn6}:
             self.format_button(btn)
 
         self.btn3.pack(padx=10)
@@ -90,14 +91,16 @@ class GUI:
             os.startfile(appdata + "/S2PDF/tables.json")
         except:
             return
+
     def create_html(self):
         try:
             HTMLFactory.generate_html(HTMLFactory())
+            generate_tables_json()
+            pyautogui.alert(title="Success!", text="The SharePoint has been downloaded.")
         except Exception as ex:
             screen.rotate_to(default_orientation)
             pyautogui.alert(title="ERROR: Download failed", text=str(ex))
-        generate_tables_json()
-        pyautogui.alert(title="Success!", text="The SharePoint has been downloaded.")
+
 
     def convert(self):
         apply_table_filters()
@@ -110,7 +113,7 @@ class GUI:
 
     def reset_tables(self):
         generate_tables_json()
-        pyautogui.alert(title="Success!", text="Tables have been reset.")
+        # pyautogui.alert(title="Success!", text="Tables have been reset.")
 
 
 def create_missing_dirs_and_files():
@@ -131,6 +134,7 @@ def create_missing_dirs_and_files():
 
 
 def generate_tables_json():
+    only_full_versions = bool(read_config()["only-full-versions"])
     try:
         with open(desktop + "/S2PDF/output.html", "r", encoding="utf-8") as f:
             soup = BeautifulSoup(f.read(), "html.parser")
@@ -149,7 +153,10 @@ def generate_tables_json():
             cols_ = {}
             cols = table.select("th")
             for col in cols:
-                cols_[cols.index(col)] = {"Title": col.text, "Visible": "True"}
+                if only_full_versions & (col.text == "Geändert"):
+                    cols_[cols.index(col)] = {"Title": col.text, "Visible": False}
+                else:
+                    cols_[cols.index(col)] = {"Title": col.text, "Visible": True}
             table_ = {"Title": title, "Columns": cols_}
             tables_[tables.index(table)] = table_
         try:
@@ -213,8 +220,7 @@ def apply_table_filters():
             header_cells = table.select("th")
             for header_cell in header_cells:
                 header_cell_id = header_cells.index(header_cell)
-                if current_filter[str(header_cell_id)]["Visible"] == "False":
-                    print("Deleting Cell: " + header_cell.text)
+                if not current_filter[str(header_cell_id)]["Visible"]:
                     header_cell.decompose()
 
             rows = table.select("tr")
@@ -222,14 +228,20 @@ def apply_table_filters():
                 cells = row.select("td")
                 for cell in cells:
                     cell_id = cells.index(cell)
-                    if current_filter[str(cell_id)]["Visible"] == "False":
-                        print("Deleting Cell: " + cell.text)
+                    if not current_filter[str(cell_id)]["Visible"]:
                         cell.decompose()
 
     # write html to new file
     with open(desktop + "/S2PDF/filtered.html", "w", encoding="utf-8") as f:
         f.write(str(soup))
     f.close()
+
+
+def read_config():
+    with open(appdata + "/S2PDF/config.json", "r", encoding="utf-8") as f:
+        config = json.load(f)
+        f.close()
+    return config
 
 
 GUI()

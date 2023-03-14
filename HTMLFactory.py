@@ -33,6 +33,7 @@ class HTMLFactory:
         self.config = load_json_from_appdata("config.json")
         self.patience = float(self.config["patience"])
         self.version_filtering = bool(self.config["version-filtering"])  # muss in config aktualisiert werden
+        self.only_full_versions = bool(self.config["only-full-versions"])
         self.layout = load_json_from_appdata("layout.json")
         self.source_map = {}
         self.reference_map = {}
@@ -90,7 +91,7 @@ class HTMLFactory:
         self.process_embeds(soup)
         # new pos
         if self.version_filtering:
-            filter_by_version(soup)
+            filter_by_version(soup, self.only_full_versions)
         save_to_output(soup)
 
         # also appending each child
@@ -396,6 +397,10 @@ def fix_headlines(soup, page_id):
     for page in pages:
         soup.find("h1")["id"] = page_id
 
+    caption_elements = soup.select('div[data-automation-id="captionElement"]')
+    for caption_element in caption_elements:
+        caption_element.find("span").name = "strong"
+
 
 def shift_headlines(soup, page):
     # shifting headline levels
@@ -466,7 +471,7 @@ def process_lists(soup):
         list_web_part.replace_with(table_html.html.body)
 
 
-def filter_by_version(soup):
+def filter_by_version(soup, only_full_versions):
     tables = soup.select("table")
     for table in tables:
         if "Version" not in table.thead.text:
@@ -475,10 +480,19 @@ def filter_by_version(soup):
         version_col_index = 0
         for header_cell in header_cells:
             version_col_index = version_col_index + 1
-            if header_cell.text == "Version": break
+            if header_cell.text == "Version":
+                break
 
         rows = table.select("tr")
         for row in rows:
             cell = row.select("td")[version_col_index - 1]
-            if ".0" not in cell.text:
+            text = cell.text
+            text = text[0:1]
+            if only_full_versions:
+                cell.string.replace_with(text + ".0")
+            if text == "0":
                 row.decompose()
+
+
+
+

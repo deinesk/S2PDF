@@ -88,10 +88,6 @@ a:link {
 }
 
 
-.ms-Image-image {
-    width:3vw;
-    border-radius:50%;
-}
 
 button {
     border-radius: 10rem;
@@ -100,4 +96,37 @@ button {
     font-size:10pt;
     margin:1px;
     padding: 0.5rem 1rem;
+}
+
+div[data-automation-id="people-list"] {
+	margin-top: 30px;
+}
+
+div[data-automation-id="people-card"] {
+	margin-bottom: 30px;
+	width: 300px;
+}
+
+div[data-automation-id="people-card"] div div {
+	display: inline-flex;
+}
+
+div[data-automation-id="people-card"] div div div {
+	display: block;
+}
+
+div[data-automation-id="people-card"] div div div div {
+	padding-left:20px;
+}
+
+
+
+div[data-automation-id="people-card"] .ms-Persona-imageArea{
+	padding:0;
+}
+
+div[data-automation-id="people-card"] .ms-Persona-imageArea .ms-Image-image {
+	padding:0;
+	width:100%;
+    	border-radius:50%;
 }
