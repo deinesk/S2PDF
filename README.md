@@ -22,7 +22,8 @@ Latest release: 1.3
 
 ## Usage
 1. Run S2PDF from desktop or start menu.
-2. Click on "Download Data" to download the SharePoint's content.
+2. Click on "Download Data" to download the SharePoint's content. 
+   - This may take a while, and you cannot use your computer.
 3. Click on "Convert to PDF" to generate the final PDF which can be found in the S2PDF folder on your desktop.
 
 
